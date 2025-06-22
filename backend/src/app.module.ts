@@ -13,11 +13,11 @@ import { MoviesModule } from './movies/movies.module';
 
     TypeOrmModule.forRoot({
       type: 'postgres',
-      // Thêm dấu '!' để báo cho TypeScript rằng chúng ta chắc chắn biến này tồn tại
+      
       host: process.env.DATABASE_HOST!,
       port: parseInt(process.env.DATABASE_PORT!, 10),
       username: process.env.DATABASE_USERNAME!,
-      password: process.env.DATABASE_PASSWORD!, // <-- Lỗi của bạn ở đây đã được sửa
+      password: process.env.DATABASE_PASSWORD!, 
       database: process.env.DATABASE_NAME!,
       autoLoadEntities: true,
       synchronize: true, 
