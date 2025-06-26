@@ -17,6 +17,10 @@ export class MoviesService {
 
     return this.moviesRepository.find();
   }
+  
+  findOne(id: number): Promise<Movie | null> {
+  return this.moviesRepository.findOneBy({ id });
+}
 
  
 }

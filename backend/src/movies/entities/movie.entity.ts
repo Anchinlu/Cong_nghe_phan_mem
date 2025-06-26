@@ -1,19 +1,16 @@
 // backend/src/movies/entities/movie.entity.ts
-
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('movies') // Nói cho TypeORM biết class này ánh xạ tới bảng 'movies'
+@Entity('movies')
 export class Movie {
-  @PrimaryGeneratedColumn() // Đánh dấu đây là cột khóa chính và tự động tăng
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Column() // Đánh dấu đây là một cột trong bảng
+  @Column()
   title: string;
 
   @Column()
   description: string;
-
-  // Dùng object để cấu hình chi tiết hơn cho cột
   @Column({ name: 'duration_minutes', type: 'int', nullable: true })
   durationMinutes: number;
 
@@ -22,4 +19,20 @@ export class Movie {
 
   @Column({ name: 'poster_url', type: 'varchar', nullable: true })
   posterUrl: string;
+
+  // --- CÁC CỘT MỚI ---
+  @Column({ nullable: true })
+  genre: string;
+
+  @Column({ name: 'age_rating', nullable: true })
+  ageRating: string;
+
+  @Column({ name: 'subtitle_info', nullable: true })
+  subtitleInfo: string;
+
+  @Column({ name: 'trailer_url', nullable: true })
+  trailerUrl: string;
+
+  @Column({ name: 'backdrop_url', nullable: true })
+  backdropUrl: string;
 }

@@ -1,6 +1,6 @@
 // file: frontend/src/app/page.tsx
-import Hero from "@/components/Hero";
-import MovieCard from "@/components/MovieCard"; // Import component MovieCard vừa tạo
+import MovieCard from "@/components/MovieCard";
+import Hero from "@/components/Hero"; 
 
 interface Movie {
   id: number;
@@ -24,21 +24,9 @@ async function getMovies(): Promise<Movie[]> {
 }
 
 export default async function HomePage() {
-  const moviesFromApi = await getMovies();
-  
-  const posterMap: { [key: string]: string } = {
-    "Pacific Rim": "/images/pacific-rim-poster.jpg",
-    "Kung Fu Panda 4": "/images/kfp4-poster.jpg",
-    "Godzilla x Kong: The New Empire": "/images/gzk-poster.jpg"
-  };
+  const movies = await getMovies(); 
 
-  // Thêm posterUrl vào mỗi object phim
-  const moviesWithPosters = moviesFromApi.map(movie => ({
-    ...movie,
-    posterUrl: posterMap[movie.title]
-  }));
-
- return (
+    return (
     <div>
       <Hero />
       <section className="p-8 md:p-12 bg-black">
@@ -46,8 +34,7 @@ export default async function HomePage() {
           Phim Đang Chiếu
         </h1>
         <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-          {/* Dùng mảng phim đã có poster để render */}
-          {moviesWithPosters.map(movie => (
+          {movies.map(movie => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
         </div>

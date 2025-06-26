@@ -1,6 +1,5 @@
 // backend/src/movies/movies.controller.ts
-
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 
 @Controller('movies')
@@ -14,6 +13,11 @@ export class MoviesController {
     
     return this.moviesService.findAll();
   }
+  @Get(':id') 
+findOne(@Param('id') id: string) {
+  
+  return this.moviesService.findOne(+id);
+}
 
  
 }
