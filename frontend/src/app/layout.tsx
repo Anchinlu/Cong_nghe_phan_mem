@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header"; // <-- 1. Import Header
+import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,10 +20,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* Chúng ta sẽ bỏ class của font Inter để body nhận màu nền từ globals.css */}
-      <body>
-        <Header /> {/* <-- 2. Thêm Header vào đây */}
-        {children} {/* children chính là page.tsx của bạn */}
+      {/* Thêm các class này vào thẻ body */}
+      <body className="bg-black flex flex-col min-h-screen">
+        <Header />
+
+        {/* Bọc children trong một thẻ main để nó tự co dãn */}
+        <main className="flex-grow">
+          {children}
+        </main>
+
+        <Footer /> {/* <-- 2. Thêm Footer vào đây */}
       </body>
     </html>
   );
