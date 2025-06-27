@@ -53,7 +53,7 @@ export default function Footer() {
         </div>
       </div>
       
-      {/* Dòng Copyright ở dưới cùng */}
+     
       <div className="bg-black py-4">
         <p className="container mx-auto text-center text-xs text-gray-500">
           &copy; {new Date().getFullYear()} CineBooking Project | Đồ án kết thúc học phần Công nghệ phần mềm.

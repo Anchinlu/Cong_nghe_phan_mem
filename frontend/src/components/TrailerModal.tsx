@@ -36,7 +36,6 @@ export default function TrailerModal({ trailerUrl, onClose }: TrailerModalProps)
             playing={true}
             pip={true}
             config={{
-              // ĐÃ SỬA LỖI Ở ĐÂY
               playerVars: { 
                 showinfo: 0,
                 modestbranding: 1,

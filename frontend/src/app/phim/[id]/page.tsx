@@ -27,7 +27,7 @@ async function getMovieById(id: string): Promise<Movie | null> {
   }
 }
 
-// Một component nhỏ cho nút Play
+
 const PlayIcon = () => (
   <svg className="w-20 h-20 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"></path>
@@ -53,7 +53,7 @@ export default async function MovieDetailPage({ params }: { params: { id: string
         </div>
       </div>
 
-      {/* Phần Thông tin chi tiết (giữ nguyên không đổi) */}
+      {/* Phần Thông tin chi tiết */}
       <div className="container mx-auto p-8 md:p-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           {/* Cột trái: Poster và Nút đặt vé */}

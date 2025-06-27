@@ -20,16 +20,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* Thêm các class này vào thẻ body */}
+      
       <body className="bg-black flex flex-col min-h-screen">
         <Header />
-
-        {/* Bọc children trong một thẻ main để nó tự co dãn */}
+        
         <main className="flex-grow">
           {children}
         </main>
 
-        <Footer /> {/* <-- 2. Thêm Footer vào đây */}
+        <Footer />
       </body>
     </html>
   );
