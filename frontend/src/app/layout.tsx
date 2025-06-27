@@ -3,8 +3,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header"; // <-- 1. Import Header
+import Header from "@/components/Header"; 
 import Footer from "@/components/Footer";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en">
       
       <body className="bg-black flex flex-col min-h-screen">
+        <AuthProvider>
         <Header />
         
         <main className="flex-grow">
@@ -29,6 +31,7 @@ export default function RootLayout({
         </main>
 
         <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

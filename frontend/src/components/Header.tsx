@@ -1,6 +1,7 @@
 // file: frontend/src/components/Header.tsx
-
+"use client";
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 
 const SearchIcon = () => (
   <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -9,6 +10,7 @@ const SearchIcon = () => (
 );
 
 export default function Header() {
+  const { user, logout } = useAuth();
   return (
     <header className="bg-gray-900 bg-opacity-80 text-white p-4 shadow-lg sticky top-0 z-50 backdrop-blur-sm">
       <div className="container mx-auto flex justify-between items-center gap-4">
@@ -41,13 +43,29 @@ export default function Header() {
           </div>
 
           {/* Cụm nút Đăng ký / Đăng nhập */}
-          <div className="flex items-center gap-2">
-            <Link href="/dang-nhap" className="text-sm font-medium px-4 py-2 rounded-md hover:bg-gray-700 transition-colors">
-              Đăng nhập
-            </Link>
-            <Link href="/dang-ky" className="bg-sky-500 text-white text-sm font-semibold py-2 px-4 rounded-md hover:bg-sky-600 transition-colors">
-              Đăng ký
-            </Link>
+        <div className="flex items-center gap-2">
+            {user ? (
+              // Nếu ĐÃ đăng nhập
+              <>
+                <span className="text-sm text-gray-300 hidden sm:block">Chào, {user.email}</span>
+                <button
+                  onClick={logout} // Bấm vào sẽ gọi hàm logout từ context
+                  className="text-sm font-medium px-4 py-2 rounded-md hover:bg-gray-700 transition-colors"
+                >
+                  Đăng xuất
+                </button>
+              </>
+            ) : (
+              // Nếu CHƯA đăng nhập
+              <>
+                <Link href="/dang-nhap" className="text-sm font-medium px-4 py-2 rounded-md hover:bg-gray-700 transition-colors">
+                  Đăng nhập
+                </Link>
+                <Link href="/dang-ky" className="bg-sky-500 text-white text-sm font-semibold py-2 px-4 rounded-md hover:bg-sky-600 transition-colors">
+                  Đăng ký
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

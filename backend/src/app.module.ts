@@ -6,6 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { MoviesModule } from './movies/movies.module';
+import { AuthModule } from './auth/auth.module';
+
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { MoviesModule } from './movies/movies.module';
     }),
 
     MoviesModule,
+
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
