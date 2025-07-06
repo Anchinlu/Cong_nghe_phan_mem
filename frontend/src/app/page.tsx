@@ -1,6 +1,6 @@
 // file: frontend/src/app/page.tsx
 import Hero from "@/components/Hero";
-import MovieCard from "@/components/MovieCard";
+
 import MovieTabs from "@/components/MovieTabs";
 
 interface Movie {
@@ -10,46 +10,42 @@ interface Movie {
   posterUrl?: string;
 }
 
-// Hàm getMovies này sẽ lấy TẤT CẢ các phim từ backend
-async function getAllMovies(): Promise<Movie[]> {
+// Hàm lấy phim ĐANG CHIẾU
+async function getNowShowingMovies(): Promise<Movie[]> {
   try {
-
-    const res = await fetch(`http://backend_service:8080/movies`, { cache: 'no-cache' });
+    const res = await fetch(`http://backend_service:8080/movies?status=NOW_SHOWING`, { cache: 'no-cache' });
     if (!res.ok) return [];
     return res.json();
   } catch (error) {
-    console.error(`Error fetching movies:`, error);
+    console.error(`Error fetching now showing movies:`, error);
     return [];
   }
 }
 
-
-const MovieGrid = ({ movies }: { movies: Movie[] }) => (
-  <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-    {movies.length > 0 ? (
-      movies.map(movie => (
-        <MovieCard key={movie.id} movie={movie} />
-      ))
-    ) : (
-      <p className="col-span-full text-center text-gray-500">Chưa có phim nào trong danh mục này.</p>
-    )}
-  </div>
-);
+// Hàm lấy phim SẮP CHIẾU
+async function getUpcomingMovies(): Promise<Movie[]> {
+  try {
+    const res = await fetch(`http://backend_service:8080/movies?status=UPCOMING`, { cache: 'no-cache' });
+    if (!res.ok) return [];
+    return res.json();
+  } catch (error) {
+    console.error(`Error fetching upcoming movies:`, error);
+    return [];
+  }
+}
 
 export default async function HomePage() {
-
-  const allMovies = await getAllMovies();
-
-
-  const nowShowingMovies = allMovies;
- 
-  const upcomingMovies = allMovies.slice(0, 5); 
+  // Gọi đồng thời cả hai hàm để tối ưu thời gian tải
+  const [nowShowingMovies, upcomingMovies] = await Promise.all([
+    getNowShowingMovies(),
+    getUpcomingMovies(),
+  ]);
 
   return (
     <div>
       <Hero />
-
-      {/*  */}
+      
+      {/* Truyền hai danh sách phim riêng biệt vào MovieTabs */}
       <MovieTabs 
         nowShowingMovies={nowShowingMovies}
         upcomingMovies={upcomingMovies}
