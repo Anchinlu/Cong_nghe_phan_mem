@@ -1,7 +1,9 @@
-// file: frontend/src/app/phim/[id]/page.tsx
+// frontend/src/app/phim/[id]/page.tsx
 import Link from 'next/link';
 import TrailerPlayer from '@/components/TrailerPlayer';
+import ShowtimeList from '@/components/ShowtimeList'; // 1. Import component mới
 
+// Định nghĩa các kiểu dữ liệu
 interface Movie {
   id: number;
   title: string;
@@ -16,26 +18,49 @@ interface Movie {
   releaseDate?: string;
 }
 
+interface Showtime {
+  id: number;
+  start_time: string;
+  auditorium: {
+    name: string;
+    theater: {
+      name: string;
+    };
+  };
+}
+
+// Hàm lấy thông tin phim
 async function getMovieById(id: string): Promise<Movie | null> {
+    try {
+        // SỬA Ở ĐÂY
+        const res = await fetch(`http://backend_service:8080/movies/${id}`, { cache: 'no-cache' });
+        if (!res.ok) return null;
+        return res.json();
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+async function getShowtimesByMovieId(id: string): Promise<Showtime[]> {
   try {
-    const res = await fetch(`http://backend_service:8080/movies/${id}`, { cache: 'no-cache' });
-    if (!res.ok) return null;
+    // SỬA Ở ĐÂY
+    const res = await fetch(`http://backend_service:8080/movies/${id}/showtimes`, { cache: 'no-cache' });
+    if (!res.ok) return [];
     return res.json();
   } catch (error) {
     console.error(error);
-    return null;
+    return [];
   }
 }
 
-
-const PlayIcon = () => (
-  <svg className="w-20 h-20 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"></path>
-  </svg>
-);
-
+// Component chính của trang
 export default async function MovieDetailPage({ params }: { params: { id: string } }) {
-  const movie = await getMovieById(params.id);
+  // Gọi đồng thời cả hai API để tối ưu thời gian tải trang
+  const [movie, showtimes] = await Promise.all([
+    getMovieById(params.id),
+    getShowtimesByMovieId(params.id),
+  ]);
 
   if (!movie) {
     return <div className="text-white text-center pt-20">Không tìm thấy phim hoặc có lỗi xảy ra.</div>;
@@ -47,9 +72,9 @@ export default async function MovieDetailPage({ params }: { params: { id: string
       <div className="relative h-[56.25vw] max-h-[80vh] bg-gray-900">
         <img src={movie.backdropUrl || movie.posterUrl || ''} alt={`Backdrop of ${movie.title}`} className="w-full h-full object-cover opacity-50" />
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-          
-          <TrailerPlayer trailerUrl={movie.trailerUrl} />
 
+          <TrailerPlayer trailerUrl={movie.trailerUrl} />
+  
         </div>
       </div>
 
@@ -64,7 +89,7 @@ export default async function MovieDetailPage({ params }: { params: { id: string
             </Link>
           </div>
 
-          {/* Cột phải: Thông tin phim */}
+          {/* Cột phải: Thông tin phim và Lịch chiếu */}
           <div className="md:col-span-9">
             <h1 className="text-4xl font-black mb-4">{movie.title}</h1>
             <div className="flex flex-wrap gap-x-4 gap-y-2 mb-4 text-gray-400">
@@ -75,6 +100,9 @@ export default async function MovieDetailPage({ params }: { params: { id: string
             </div>
             <h2 className="text-xl font-bold mt-8 mb-2">Nội dung phim</h2>
             <p className="text-gray-300 leading-relaxed">{movie.description}</p>
+            
+            {/* 2. Thêm component Lịch chiếu vào đây */}
+            <ShowtimeList showtimes={showtimes} />
           </div>
         </div>
       </div>

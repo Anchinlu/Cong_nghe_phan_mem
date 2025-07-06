@@ -3,6 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, On
 import { User } from '../../users/entities/user.entity';
 import { Showtime } from '../../showtimes/entities/showtime.entity';
 import { BookedSeat } from './booked-seat.entity';
+import { JoinColumn } from 'typeorm';
 
 @Entity('bookings')
 export class Booking {
@@ -10,9 +11,11 @@ export class Booking {
   id: number;
 
   @ManyToOne(() => User, user => user.id)
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @ManyToOne('Showtime', (showtime: Showtime) => showtime.bookings)
+  @JoinColumn({ name: 'showtime_id' })
   showtime: Showtime;
   
   @OneToMany(() => BookedSeat, (bookedSeat) => bookedSeat.booking, { cascade: true })
