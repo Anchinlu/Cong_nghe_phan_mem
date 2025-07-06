@@ -1,6 +1,8 @@
+// backend/src/bookings/entities/booking.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, OneToMany } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
-// KHÔNG IMPORT SHOWTIME VÀ BOOKEDSEAT Ở ĐÂY
+import { Showtime } from '../../showtimes/entities/showtime.entity';
+import { BookedSeat } from './booked-seat.entity';
 
 @Entity('bookings')
 export class Booking {
@@ -10,13 +12,11 @@ export class Booking {
   @ManyToOne(() => User, user => user.id)
   user: User;
 
-  // Sửa lỗi: Dùng chuỗi 'Showtime'
-  @ManyToOne('Showtime', (showtime: any) => showtime.bookings)
-  showtime: any;
+  @ManyToOne('Showtime', (showtime: Showtime) => showtime.bookings)
+  showtime: Showtime;
   
-  // Sửa lỗi: Dùng chuỗi 'BookedSeat'
-  @OneToMany('BookedSeat', (bookedSeat: any) => bookedSeat.booking, { cascade: true })
-  seats: any[];
+  @OneToMany(() => BookedSeat, (bookedSeat) => bookedSeat.booking, { cascade: true })
+  seats: BookedSeat[];
 
   @Column({ type: 'decimal' })
   total_price: number;

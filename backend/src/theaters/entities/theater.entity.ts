@@ -1,3 +1,4 @@
+// backend/src/theaters/entities/theater.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Auditorium } from '../../auditoriums/entities/auditorium.entity';
 

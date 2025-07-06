@@ -1,5 +1,7 @@
+// backend/src/auditoriums/entities/auditorium.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
-
+import { Theater } from '../../theaters/entities/theater.entity';
+import { Showtime } from '../../showtimes/entities/showtime.entity';
 
 @Entity('auditoriums')
 export class Auditorium {
@@ -12,11 +14,9 @@ export class Auditorium {
   @Column({ type: 'jsonb' })
   seat_layout: { rows: number; cols: number; unavailable?: { row: number, col: number }[] };
 
+  @ManyToOne(() => Theater, (theater) => theater.auditoriums)
+  theater: Theater;
   
-  @ManyToOne('Theater', (theater: any) => theater.auditoriums)
-  theater: any;
-  
- 
-  @OneToMany('Showtime', (showtime: any) => showtime.auditorium)
-  showtimes: any[];
+  @OneToMany('Showtime', (showtime: Showtime) => showtime.auditorium)
+  showtimes: Showtime[];
 }

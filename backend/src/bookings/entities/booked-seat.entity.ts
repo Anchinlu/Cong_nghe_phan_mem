@@ -1,5 +1,6 @@
+// backend/src/bookings/entities/booked-seat.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-
+import { Booking } from './booking.entity';
 
 @Entity('booked_seats')
 export class BookedSeat {
@@ -12,7 +13,6 @@ export class BookedSeat {
   @Column()
   seat_number: number;
   
-  
-  @ManyToOne('Booking', (booking: any) => booking.seats)
-  booking: any;
+  @ManyToOne('Booking', (booking: Booking) => booking.seats)
+  booking: Booking;
 }
