@@ -19,7 +19,7 @@ export class BookingsService {
     private showtimesRepository: Repository<Showtime>,
   ) {}
 
-  // ... (phần còn lại của service giữ nguyên)
+  
   async create(createBookingDto: CreateBookingDto, user: User): Promise<Booking> {
     const { showtimeId, seats } = createBookingDto;
 
@@ -55,5 +55,21 @@ export class BookingsService {
     });
     
     return this.bookingsRepository.save(newBooking);
+  }
+  async findForUser(user: User): Promise<Booking[]> {
+  return this.bookingsRepository.find({
+    where: { user: { id: user.id } },
+    
+    relations: [
+      'showtime', 
+      'showtime.movie', 
+      'showtime.auditorium', 
+      'showtime.auditorium.theater',
+      'seats'
+    ],
+    order: {
+      createdAt: 'DESC',
+         },
+    });
   }
 }

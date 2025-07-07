@@ -25,7 +25,7 @@ export default function SeatPicker({ seatLayout, bookedSeats, showtimeId }: Seat
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   const TICKET_PRICE = 75000;
 
@@ -48,7 +48,7 @@ export default function SeatPicker({ seatLayout, bookedSeats, showtimeId }: Seat
   const isSeatUnavailable = (seat: Seat) => seatLayout.unavailable?.some(s => s.row === seat.row && s.col === seat.col);
 
   const handleBooking = async () => {
-    if (!user) {
+    if (!user || !token) {
       alert('Vui lòng đăng nhập để đặt vé.');
       router.push('/dang-nhap');
       return;
@@ -60,10 +60,13 @@ export default function SeatPicker({ seatLayout, bookedSeats, showtimeId }: Seat
     setError('');
     setIsLoading(true);
 
-    try {
+     try {
       const res = await fetch('http://localhost:8080/bookings', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify({
           showtimeId,
           seats: selectedSeats.map(s => ({ row: s.row, col: s.col })),
