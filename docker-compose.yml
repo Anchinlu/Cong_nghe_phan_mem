@@ -1,3 +1,4 @@
+# docker-compose.yml
 
 services:
   # Dịch vụ Database (PostgreSQL)
@@ -12,6 +13,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    # ---- THÊM HEALTHCHECK CHO DATABASE ----
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U Anchinlu -d cine_booking_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   # Dịch vụ Backend (NestJS)
   backend:
@@ -25,8 +32,10 @@ services:
       - /usr/src/app/node_modules
     env_file:
       - ./backend/.env
+    # ---- SỬA LẠI DEPENDS_ON ----
     depends_on:
-      - db
+      db:
+        condition: service_healthy # Chỉ khởi động khi db đã "healthy"
 
   # Dịch vụ Frontend (Next.js)
   frontend:
@@ -40,6 +49,9 @@ services:
       - /usr/src/app/node_modules
     stdin_open: true
     tty: true
+    # ---- THÊM DEPENDS_ON CHO FRONTEND ----
+    depends_on:
+      - backend # Đảm bảo frontend khởi động sau backend
 
 volumes:
   postgres_data:
