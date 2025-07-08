@@ -1,7 +1,7 @@
 // frontend/src/components/Header.tsx
 "use client";
 import Link from 'next/link';
-import UserMenu from './UserMenu'; // <-- 1. Import component mới
+import UserMenu from './UserMenu'; 
 
 const SearchIcon = () => (
   <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

@@ -1,7 +1,7 @@
 // frontend/src/app/phim/[id]/page.tsx
 import Link from 'next/link';
 import TrailerPlayer from '@/components/TrailerPlayer';
-import ShowtimeList from '@/components/ShowtimeList'; // 1. Import component mới
+import ShowtimeList from '@/components/ShowtimeList'; 
 
 // Định nghĩa các kiểu dữ liệu
 interface Movie {
@@ -30,36 +30,26 @@ interface Showtime {
 }
 
 // Hàm lấy thông tin phim
-async function getMovieById(id: string): Promise<Movie | null> {
-    try {
-        // SỬA Ở ĐÂY
-        const res = await fetch(`http://backend_service:8080/movies/${id}`, { cache: 'no-cache' });
-        if (!res.ok) return null;
-        return res.json();
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
+async function getMovieById(id: string) {
+    const res = await fetch(`http://backend_service:8080/movies/${id}`, { cache: 'no-cache' });
+    if (!res.ok) return null;
+    return res.json();
 }
 
-async function getShowtimesByMovieId(id: string): Promise<Showtime[]> {
-  try {
-    // SỬA Ở ĐÂY
+async function getShowtimesByMovieId(id: string) {
     const res = await fetch(`http://backend_service:8080/movies/${id}/showtimes`, { cache: 'no-cache' });
     if (!res.ok) return [];
     return res.json();
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
+    
 }
 
-// Component chính của trang
-export default async function MovieDetailPage({ params }: { params: { id: string } }) {
-  // Gọi đồng thời cả hai API để tối ưu thời gian tải trang
+export default async function MovieDetailPage(props: { params: { id: string } }) {
+  const { params } = await Promise.resolve(props); // Await the props
+  const { id } = params; // Now destructure id safely
+
   const [movie, showtimes] = await Promise.all([
-    getMovieById(params.id),
-    getShowtimesByMovieId(params.id),
+    getMovieById(id),
+    getShowtimesByMovieId(id),
   ]);
 
   if (!movie) {

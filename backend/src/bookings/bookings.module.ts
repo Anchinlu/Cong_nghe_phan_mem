@@ -6,11 +6,13 @@ import { BookingsController } from './bookings.controller';
 import { Booking } from './entities/booking.entity';
 import { BookedSeat } from './entities/booked-seat.entity';
 import { ShowtimesModule } from '../showtimes/showtimes.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Booking, BookedSeat]),
-    forwardRef(() => ShowtimesModule), // Dùng forwardRef để phá vỡ vòng lặp
+    forwardRef(() => ShowtimesModule),
+    AuthModule, 
   ],
   controllers: [BookingsController],
   providers: [BookingsService],

@@ -1,9 +1,9 @@
 // backend/src/auth/get-user.decorator.ts
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { User } from '../users/entities/user.entity';
+import { UserPayload } from './jwt.strategy'; 
 
 export const GetUser = createParamDecorator(
-  (_data, ctx: ExecutionContext): User => {
+  (_data, ctx: ExecutionContext): UserPayload => { 
     const req = ctx.switchToHttp().getRequest();
     return req.user;
   },

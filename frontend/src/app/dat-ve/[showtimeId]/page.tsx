@@ -1,6 +1,7 @@
 // frontend/src/app/dat-ve/[showtimeId]/page.tsx
 import SeatPicker from "@/components/SeatPicker";
 
+
 // Định nghĩa kiểu dữ liệu trả về từ API
 interface SeatLayoutData {
   seatLayout: {
@@ -12,20 +13,18 @@ interface SeatLayoutData {
 }
 
 // Hàm gọi API lấy sơ đồ ghế
-async function getSeatLayout(showtimeId: string): Promise<SeatLayoutData | null> {
-  try {
-    // SỬA Ở ĐÂY
+async function getSeatLayout(showtimeId: string) {
     const res = await fetch(`http://backend_service:8080/showtimes/${showtimeId}/seats`, { cache: 'no-cache' });
     if (!res.ok) return null;
     return res.json();
-  } catch (error) {
-    console.error('Failed to fetch seat layout:', error);
-    return null;
-  }
+
 }
 
-export default async function BookingPage({ params }: { params: { showtimeId: string } }) {
-  const seatData = await getSeatLayout(params.showtimeId);
+export default async function BookingPage(props: { params: { showtimeId: string } }) {
+  const { params } = await Promise.resolve(props); // Await the props
+  const { showtimeId } = params; // Now destructure showtimeId safely
+
+  const seatData = await getSeatLayout(showtimeId);
 
   if (!seatData) {
     return <div className="text-white text-center pt-20">Không thể tải sơ đồ ghế. Vui lòng thử lại.</div>;
@@ -37,7 +36,7 @@ export default async function BookingPage({ params }: { params: { showtimeId: st
       <SeatPicker 
         seatLayout={seatData.seatLayout}
         bookedSeats={seatData.bookedSeats}
-        showtimeId={parseInt(params.showtimeId)}
+        showtimeId={parseInt(showtimeId)}
       />
     </div>
   );

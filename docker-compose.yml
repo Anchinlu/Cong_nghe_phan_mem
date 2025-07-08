@@ -1,26 +1,21 @@
-# docker-compose.yml
-
 services:
-  # Dịch vụ Database (PostgreSQL)
   db:
     image: postgres:15-alpine
     container_name: postgres_db
     environment:
-      POSTGRES_USER: Anchinlu      
-      POSTGRES_PASSWORD: 110122027  
-      POSTGRES_DB: cine_booking_db      
+      POSTGRES_USER: Anchinlu
+      POSTGRES_PASSWORD: 110122027
+      POSTGRES_DB: cine_booking_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    # ---- THÊM HEALTHCHECK CHO DATABASE ----
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U Anchinlu -d cine_booking_db"]
       interval: 5s
       timeout: 5s
       retries: 5
 
-  # Dịch vụ Backend (NestJS)
   backend:
     build:
       context: ./backend
@@ -32,12 +27,17 @@ services:
       - /usr/src/app/node_modules
     env_file:
       - ./backend/.env
-    # ---- SỬA LẠI DEPENDS_ON ----
     depends_on:
       db:
-        condition: service_healthy # Chỉ khởi động khi db đã "healthy"
+        condition: service_healthy
+    # --- THAY ĐỔI HEALTHCHECK CỦA BACKEND ---
+    # Alpine không có sẵn wget, dùng một script nhỏ với nc (netcat) để kiểm tra
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 8080"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
-  # Dịch vụ Frontend (Next.js)
   frontend:
     build:
       context: ./frontend
@@ -49,9 +49,9 @@ services:
       - /usr/src/app/node_modules
     stdin_open: true
     tty: true
-    # ---- THÊM DEPENDS_ON CHO FRONTEND ----
     depends_on:
-      - backend # Đảm bảo frontend khởi động sau backend
+      backend:
+        condition: service_healthy # Yêu cầu frontend chờ cho đến khi backend "khỏe mạnh"
 
 volumes:
   postgres_data:

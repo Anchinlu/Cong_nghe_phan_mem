@@ -27,13 +27,12 @@ export default function MovieCard({ movie }: { movie: Movie }) {
       </Link>
       
     
-      <div className="p-4 flex flex-col flex-grow">
+     <div className="p-4 flex flex-col flex-grow">
         <h3 className="text-lg font-bold text-white truncate mb-2">{movie.title}</h3>
-        
-       
+
         <div className="mt-auto pt-4 flex flex-col gap-2">
           <Link 
-            href={`/dat-ve/${movie.id}`}
+            href={`/chon-rap/${movie.id}`} 
             className="w-full bg-sky-500 text-white text-center font-semibold py-2 rounded-md hover:bg-sky-600 transition-colors text-sm"
           >
             Đặt Vé
