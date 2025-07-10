@@ -1,6 +1,6 @@
 // frontend/src/app/dat-ve/[showtimeId]/page.tsx
 import SeatPicker from "@/components/SeatPicker";
-
+import React from 'react';
 
 // Định nghĩa kiểu dữ liệu trả về từ API
 interface SeatLayoutData {
@@ -20,15 +20,14 @@ async function getSeatLayout(showtimeId: string) {
 
 }
 
-export default async function BookingPage(props: { params: { showtimeId: string } }) {
-  const { params } = await Promise.resolve(props); // Await the props
-  const { showtimeId } = params; // Now destructure showtimeId safely
-
+export default async function BookingPage({ params }: { params: { showtimeId: string } }) {
+  const { showtimeId } = params; 
   const seatData = await getSeatLayout(showtimeId);
 
   if (!seatData) {
     return <div className="text-white text-center pt-20">Không thể tải sơ đồ ghế. Vui lòng thử lại.</div>;
   }
+
 
   return (
     <div className="container mx-auto px-4 py-8">

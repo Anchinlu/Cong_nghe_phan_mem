@@ -30,8 +30,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    # --- THAY ĐỔI HEALTHCHECK CỦA BACKEND ---
-    # Alpine không có sẵn wget, dùng một script nhỏ với nc (netcat) để kiểm tra
+
     healthcheck:
       test: ["CMD-SHELL", "nc -z localhost 8080"]
       interval: 5s
@@ -51,7 +50,7 @@ services:
     tty: true
     depends_on:
       backend:
-        condition: service_healthy # Yêu cầu frontend chờ cho đến khi backend "khỏe mạnh"
+        condition: service_healthy 
 
 volumes:
   postgres_data:

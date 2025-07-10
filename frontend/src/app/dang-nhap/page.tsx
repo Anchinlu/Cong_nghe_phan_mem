@@ -1,9 +1,9 @@
 // file: frontend/src/app/dang-nhap/page.tsx
-"use client"; // Đánh dấu đây là Client Component để có thể sử dụng hook và sự kiện
+"use client"; 
 
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/contexts/AuthContext'; // <-- 1. Import useAuth
+import { useAuth } from '@/contexts/AuthContext'; 
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {

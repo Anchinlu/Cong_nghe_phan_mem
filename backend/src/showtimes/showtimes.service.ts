@@ -56,5 +56,32 @@ export class ShowtimesService {
       bookedSeats: bookedSeats,
          };
     }
+     async search(
+        movieId: number, 
+        date: string, 
+        city?: string
+    ): Promise<Showtime[]> {
+        const startDate = new Date(date);
+        startDate.setHours(0, 0, 0, 0);
+
+        const endDate = new Date(date);
+        endDate.setHours(23, 59, 59, 999);
+
+        const query = this.showtimesRepository
+            .createQueryBuilder('showtime')
+            .innerJoinAndSelect('showtime.auditorium', 'auditorium')
+            .innerJoinAndSelect('auditorium.theater', 'theater')
+            .where('showtime.movie_id = :movieId', { movieId })
+            .andWhere('showtime.start_time BETWEEN :startDate AND :endDate', { startDate, endDate });
+
+        if (city) {
+            query.andWhere('theater.city = :city', { city });
+        }
+
+        return query
+            .orderBy('theater.name', 'ASC')
+            .addOrderBy('showtime.start_time', 'ASC')
+            .getMany();
+    }
     
 }

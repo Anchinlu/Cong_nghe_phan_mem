@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import TrailerPlayer from '@/components/TrailerPlayer';
 import ShowtimeList from '@/components/ShowtimeList'; 
+import React from 'react';
 
 // Định nghĩa các kiểu dữ liệu
 interface Movie {
@@ -43,9 +44,8 @@ async function getShowtimesByMovieId(id: string) {
     
 }
 
-export default async function MovieDetailPage(props: { params: { id: string } }) {
-  const { params } = await Promise.resolve(props); // Await the props
-  const { id } = params; // Now destructure id safely
+export default async function MovieDetailPage({ params }: { params: { id: string } }) {
+  const { id } = params; 
 
   const [movie, showtimes] = await Promise.all([
     getMovieById(id),
