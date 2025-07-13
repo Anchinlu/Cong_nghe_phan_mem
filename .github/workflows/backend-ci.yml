@@ -1,4 +1,4 @@
-# file: backend/.github/workflows/backend-ci.yml
+# file: .github/workflows/backend-ci.yml
 
 name: Backend CI
 
@@ -11,6 +11,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: ./backend
@@ -23,6 +24,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
 
       - name: Install dependencies
         run: npm install
@@ -32,3 +35,6 @@ jobs:
 
       - name: Build project
         run: npm run build
+
+      - name: Run unit tests
+        run: npm run test
