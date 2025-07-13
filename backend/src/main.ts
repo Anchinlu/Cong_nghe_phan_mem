@@ -1,12 +1,25 @@
 // backend/src/main.ts
+import 'crypto';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'; 
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Bật CORS để frontend (chạy ở port 3000) có thể gọi được API
   app.enableCors();
+
+ 
+  const config = new DocumentBuilder()
+    .setTitle('CineBooking API')
+    .setDescription('Tài liệu API cho dự án đặt vé xem phim CineBooking')
+    .setVersion('1.0')
+    .addBearerAuth() 
+    .build();
+
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api-docs', app, document); 
 
   await app.listen(8080);
 }

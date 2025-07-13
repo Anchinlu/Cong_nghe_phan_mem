@@ -22,7 +22,6 @@ export default function Header() {
 
         <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
           <Link href="/" className="hover:text-sky-400 transition-colors">Trang chủ</Link>
-          <Link href="/lich-chieu" className="hover:text-sky-400 transition-colors">Lịch Chiếu</Link>
           <Link href="/phim" className="hover:text-sky-400 transition-colors">Phim</Link>
           <Link href="/cum-rap" className="hover:text-sky-400 transition-colors">Cụm Rạp</Link>
           <Link href="/tin-tuc" className="hover:text-sky-400 transition-colors">Tin Tức</Link>

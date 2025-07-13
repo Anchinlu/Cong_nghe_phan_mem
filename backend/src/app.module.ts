@@ -34,7 +34,6 @@ import { BookedSeat } from './bookings/entities/booked-seat.entity';
       password: process.env.DATABASE_PASSWORD, 
       database: process.env.DATABASE_NAME,
       
-      // Thêm tất cả các entity vào đây để TypeORM nhận diện
       entities: [
         Movie, 
         User, 
@@ -48,7 +47,6 @@ import { BookedSeat } from './bookings/entities/booked-seat.entity';
       synchronize: true,
     }),
 
-    // Import các module mới
     MoviesModule,
     
     AuthModule,
