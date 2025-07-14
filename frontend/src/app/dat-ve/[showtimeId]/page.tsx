@@ -1,6 +1,7 @@
 // frontend/src/app/dat-ve/[showtimeId]/page.tsx
 import SeatPicker from "@/components/SeatPicker";
 import React from 'react';
+export const dynamicParams = true;
 
 
 async function getSeatLayout(showtimeId: string) {
