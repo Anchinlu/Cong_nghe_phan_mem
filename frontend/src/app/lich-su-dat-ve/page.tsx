@@ -80,8 +80,7 @@ export default function BookingHistoryPage() {
                 width={128} 
                 height={192}
                 className="w-full md:w-32 h-auto object-cover rounded-md" 
-              />
-              
+              />     
               <div className="text-gray-300">
                 <h2 className="text-xl font-bold text-white">{booking.showtime.movie.title}</h2>
                 <p>

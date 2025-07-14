@@ -1,4 +1,3 @@
-// frontend/src/app/layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header"; 
@@ -10,13 +9,19 @@ export const metadata: Metadata = {
   description: "Hệ thống đặt vé xem phim trực tuyến",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode; }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en">
       <body className="bg-black flex flex-col min-h-screen">
         <AuthProvider>
           <Header />
-          <main className="flex-grow">{children}</main>
+          <main className="flex-grow">
+            {children}
+          </main>
           <Footer />
         </AuthProvider>
       </body>

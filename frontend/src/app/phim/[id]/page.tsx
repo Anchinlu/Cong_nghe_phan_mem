@@ -4,14 +4,6 @@ import TrailerPlayer from '@/components/TrailerPlayer';
 import ShowtimeList from '@/components/ShowtimeList';
 import Image from 'next/image';
 
-interface Movie {
-  id: number; title: string; description: string; posterUrl?: string; trailerUrl?: string;
-  backdropUrl?: string; genre?: string; durationMinutes?: number; ageRating?: string;
-}
-interface Showtime {
-  id: number; start_time: string; auditorium: { name: string; theater: { name: string; }; };
-}
-
 async function getMovieById(id: string) {
     const res = await fetch(`http://backend_service:8080/movies/${id}`, { cache: 'no-cache' });
     if (!res.ok) return null;

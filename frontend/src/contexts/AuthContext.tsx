@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Tạo một custom hook để dễ dàng sử dụng context ở các component khác
+
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
