@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 type SafeUser = Omit<User, 'password'>;
 
@@ -44,17 +44,14 @@ export class AuthService {
     const { email, password } = loginUserDto;
     const user = await this.usersRepository.findOneBy({ email });
 
-    if (!user) {
-      throw new UnauthorizedException('Thông tin đăng nhập không hợp lệ');
-    }
+    const isMatch: boolean = user ? await bcrypt.compare(password, user.password) : false;
 
-    const isPasswordMatch: boolean = await bcrypt.compare(password, user.password);
-    if (!isPasswordMatch) {
+    if (!user || !isMatch) {
       throw new UnauthorizedException('Thông tin đăng nhập không hợp lệ');
     }
 
     const payload = { sub: user.id, email: user.email, role: user.role };
-    const accessToken: string = await this.jwtService.signAsync(payload);
+    const accessToken = await this.jwtService.signAsync(payload);
 
     return {
       access_token: accessToken,

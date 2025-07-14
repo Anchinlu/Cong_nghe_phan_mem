@@ -1,34 +1,9 @@
 // frontend/src/app/phim/[id]/page.tsx
 import Link from 'next/link';
 import TrailerPlayer from '@/components/TrailerPlayer';
-import ShowtimeList from '@/components/ShowtimeList'; 
-import React from 'react';
+import ShowtimeList from '@/components/ShowtimeList';
+import Image from 'next/image'; 
 
-// Định nghĩa các kiểu dữ liệu
-interface Movie {
-  id: number;
-  title: string;
-  description: string;
-  posterUrl?: string;
-  trailerUrl?: string;
-  backdropUrl?: string;
-  genre?: string;
-  durationMinutes?: number;
-  ageRating?: string;
-  subtitleInfo?: string;
-  releaseDate?: string;
-}
-
-interface Showtime {
-  id: number;
-  start_time: string;
-  auditorium: {
-    name: string;
-    theater: {
-      name: string;
-    };
-  };
-}
 
 // Hàm lấy thông tin phim
 async function getMovieById(id: string) {
@@ -60,7 +35,14 @@ export default async function MovieDetailPage({ params }: { params: { id: string
     <div className="bg-black min-h-screen text-white">
       {/* Phần Trailer */}
       <div className="relative h-[56.25vw] max-h-[80vh] bg-gray-900">
-        <img src={movie.backdropUrl || movie.posterUrl || ''} alt={`Backdrop of ${movie.title}`} className="w-full h-full object-cover opacity-50" />
+        <Image 
+                src={movie.backdropUrl} 
+                alt={`Backdrop of ${movie.title}`} 
+                layout="fill"
+                objectFit="cover"
+                className="opacity-50"
+                priority
+            />
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
 
           <TrailerPlayer trailerUrl={movie.trailerUrl} />
@@ -73,7 +55,13 @@ export default async function MovieDetailPage({ params }: { params: { id: string
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           {/* Cột trái: Poster và Nút đặt vé */}
           <div className="md:col-span-3">
-            <img src={movie.posterUrl || ''} alt={`Poster of ${movie.title}`} className="rounded-lg w-full mb-4" />
+           <Image 
+                    src={movie.posterUrl} 
+                    alt={`Poster of ${movie.title}`} 
+                    width={500} 
+                    height={750}
+                    className="rounded-lg w-full h-auto mb-4" 
+                />
             <Link href={`/dat-ve/${movie.id}`} className="w-full bg-sky-500 text-white text-center font-bold py-3 rounded-lg hover:bg-sky-600 transition-colors text-lg block">
               Đặt Vé
             </Link>

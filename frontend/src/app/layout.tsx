@@ -1,36 +1,23 @@
-// file: frontend/src/app/layout.tsx
-
+// frontend/src/app/layout.tsx
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header"; 
 import Footer from "@/components/Footer";
 import { AuthProvider } from "@/contexts/AuthContext";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "CineBooking Project",
   description: "Hệ thống đặt vé xem phim trực tuyến",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode; }) {
   return (
     <html lang="en">
-      
       <body className="bg-black flex flex-col min-h-screen">
         <AuthProvider>
-        <Header />
-        
-        <main className="flex-grow">
-          {children}
-        </main>
-
-        <Footer />
+          <Header />
+          <main className="flex-grow">{children}</main>
+          <Footer />
         </AuthProvider>
       </body>
     </html>

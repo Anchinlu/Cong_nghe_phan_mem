@@ -6,6 +6,8 @@ import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 
+export type UserPayload = Omit<User, 'password'>;
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
@@ -23,15 +25,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: { sub: number; email: string }): Promise<Omit<User, 'password'>> {
+  async validate(payload: { sub: number; email: string }): Promise<UserPayload> {
     const user = await this.usersRepository.findOneBy({ id: payload.sub });
-
     if (!user) {
       throw new UnauthorizedException();
     }
-
-    const { password: _password, ...result } = user; 
-
+    const { password: _password, ...result } = user;
     return result;
   }
 }

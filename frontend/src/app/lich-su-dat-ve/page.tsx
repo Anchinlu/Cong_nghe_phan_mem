@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import Image from 'next/image';
 
 // Định nghĩa các kiểu dữ liệu
 interface Booking {
@@ -42,14 +43,18 @@ export default function BookingHistoryPage() {
         }
         const data = await res.json();
         setBookings(data);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) { 
+        if (err instanceof Error) setError(err.message);
+        else setError('Đã xảy ra lỗi không xác định.');
       } finally {
         setIsLoading(false);
       }
     };
-
-    fetchHistory();
+    if (token) fetchHistory();
+    else {
+        setError('Vui lòng đăng nhập để xem lịch sử đặt vé.');
+        setIsLoading(false);
+    }
   }, [token]);
 
   if (isLoading) {
