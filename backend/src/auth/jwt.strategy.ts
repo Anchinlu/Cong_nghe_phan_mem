@@ -26,10 +26,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: { sub: number; email: string }): Promise<Omit<User, 'password'>> {
     const user = await this.usersRepository.findOneBy({ id: payload.sub });
+
     if (!user) {
       throw new UnauthorizedException();
     }
-    const { password, ...result } = user;
+    
+    const { password: _, ...result } = user;
     return result;
   }
 }
