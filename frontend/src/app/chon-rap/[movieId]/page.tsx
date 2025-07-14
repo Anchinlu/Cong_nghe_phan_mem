@@ -1,4 +1,3 @@
-// frontend/src/app/chon-rap/[movieId]/page.tsx
 import TheaterAndShowtimePicker from '@/components/TheaterAndShowtimePicker';
 
 async function getTheaters() {
@@ -12,7 +11,13 @@ async function getTheaters() {
   }
 }
 
-export default async function SelectTheaterPage({ params }: { params: { movieId: string } }) {
+type Props = {
+  params: {
+    movieId: string;
+  };
+};
+
+export default async function SelectTheaterPage({ params }: Props) {
   const { movieId } = params;
   const theaters = await getTheaters();
 
