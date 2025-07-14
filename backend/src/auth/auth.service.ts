@@ -6,7 +6,6 @@ import { User } from '../users/entities/user.entity';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
-import { omit } from 'lodash';
 
 type SafeUser = Omit<User, 'password'>;
 
@@ -34,10 +33,10 @@ export class AuthService {
       password: hashedPassword,
       fullName,
     });
-    
+
     await this.usersRepository.save(newUser);
 
-    const safeUser = omit<User, 'password'>(newUser, ['password']) as SafeUser;
+    const { password: _password, ...safeUser } = newUser;
     return safeUser;
   }
 

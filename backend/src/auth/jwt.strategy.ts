@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
-import { omit } from 'lodash';
 
 export type UserPayload = Omit<User, 'password'>;
 
@@ -31,7 +30,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
 
-    const safeUser = omit<User, 'password'>(user, ['password']) as UserPayload;
+    const { password: _password, ...safeUser } = user;
     return safeUser;
   }
 }
