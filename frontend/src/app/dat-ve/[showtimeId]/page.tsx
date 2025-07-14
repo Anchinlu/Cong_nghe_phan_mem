@@ -10,7 +10,7 @@ async function getSeatLayout(showtimeId: string) {
     const res = await fetch(`http://backend_service:8080/showtimes/${showtimeId}/seats`, { cache: 'no-cache' });
     if (!res.ok) return null;
     return res.json();
-
+    
 }
 
 export default async function BookingPage({ params }: { params: { showtimeId: string } }) {
