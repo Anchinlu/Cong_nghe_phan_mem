@@ -17,10 +17,8 @@ async function getShowtimesByMovieId(id: string) {
 }
 
 
-export default async function MovieDetailPage(props: { params: { id: string } }) {
-  const { params } = await Promise.resolve(props); 
-  const { id } = params; 
-
+export default async function MovieDetailPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const [movie, showtimes] = await Promise.all([
     getMovieById(id),
     getShowtimesByMovieId(id),

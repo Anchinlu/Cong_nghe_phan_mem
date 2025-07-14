@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt'; 
 
 type SafeUser = Omit<User, 'password'>;
 
@@ -27,6 +27,7 @@ export class AuthService {
 
     let salt: string;
     let hashedPassword: string;
+
     try {
       salt = await bcrypt.genSalt();
       hashedPassword = await bcrypt.hash(password, salt);
@@ -42,7 +43,7 @@ export class AuthService {
 
     await this.usersRepository.save(newUser);
 
-    const { password: _, ...result } = newUser;
+    const { password: _omitPassword, ...result } = newUser; 
     return result;
   }
 
@@ -68,8 +69,6 @@ export class AuthService {
     const payload = { sub: user.id, email: user.email, role: user.role };
     const accessToken: string = await this.jwtService.signAsync(payload);
 
-    return {
-      access_token: accessToken,
-    };
+    return { access_token: accessToken };
   }
 }

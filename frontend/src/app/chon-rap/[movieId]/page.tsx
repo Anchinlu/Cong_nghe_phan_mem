@@ -1,8 +1,6 @@
 // frontend/src/app/chon-rap/[movieId]/page.tsx
 import TheaterAndShowtimePicker from '@/components/TheaterAndShowtimePicker';
-import React from 'react';
-
-interface PageProps {
+interface SelectTheaterPageProps {
   params: { movieId: string };
 }
 
@@ -17,8 +15,7 @@ async function getTheaters() {
   }
 }
 
-// Cách viết đúng cho Next.js app router:
-export default async function Page({ params }: PageProps) {
+export default async function SelectTheaterPage({ params }: SelectTheaterPageProps) {
   const { movieId } = params;
   const theaters = await getTheaters();
 
