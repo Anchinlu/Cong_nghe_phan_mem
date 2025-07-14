@@ -16,6 +16,7 @@ async function getShowtimesByMovieId(id: string) {
     return res.json();
 }
 
+
 export default async function MovieDetailPage(props: { params: { id: string } }) {
   const { params } = await Promise.resolve(props); 
   const { id } = params; 

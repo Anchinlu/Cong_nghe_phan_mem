@@ -1,21 +1,28 @@
 // frontend/src/app/chon-rap/[movieId]/page.tsx
 import TheaterAndShowtimePicker from '@/components/TheaterAndShowtimePicker';
+import React from 'react';
 
+// Định nghĩa kiểu dữ liệu cho props một cách tường minh
+interface SelectTheaterPageProps {
+  params: { movieId: string };
+}
+
+// Hàm để lấy danh sách rạp từ backend
 async function getTheaters() {
   try {
     const res = await fetch('http://backend_service:8080/theaters', { cache: 'no-cache' });
     if (!res.ok) return [];
-    return res.json();
+    return await res.json();
   } catch (error) {
     console.error("Failed to fetch theaters", error);
     return [];
   }
 }
 
+export default async function SelectTheaterPage(props: SelectTheaterPageProps) {
 
-export default async function SelectTheaterPage(props: { params: { movieId: string } }) {
-  const { params } = await Promise.resolve(props); 
-  const { movieId } = params; 
+  const { params } = await Promise.resolve(props);
+  const { movieId } = params;
 
   const theaters = await getTheaters();
 

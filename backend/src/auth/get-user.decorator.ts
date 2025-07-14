@@ -1,4 +1,3 @@
-// backend/src/auth/get-user.decorator.ts
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { UserPayload } from './jwt.strategy';
 

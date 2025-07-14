@@ -1,4 +1,3 @@
-// backend/src/auth/auth.service.ts
 import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -26,8 +25,8 @@ export class AuthService {
       throw new ConflictException('Địa chỉ email này đã được sử dụng');
     }
 
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const salt: string = await bcrypt.genSalt();
+    const hashedPassword: string = await bcrypt.hash(password, salt);
 
     const newUser = this.usersRepository.create({
       email,
@@ -37,7 +36,7 @@ export class AuthService {
     
     await this.usersRepository.save(newUser);
 
-    const { password: _, ...result } = newUser;
+    const { password: _, ...result } = newUser; 
     return result;
   }
 
@@ -45,12 +44,14 @@ export class AuthService {
     const { email, password } = loginUserDto;
     const user = await this.usersRepository.findOneBy({ email });
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    const isMatch: boolean = user ? await bcrypt.compare(password, user.password) : false;
+
+    if (!user || !isMatch) {
       throw new UnauthorizedException('Thông tin đăng nhập không hợp lệ');
     }
     
     const payload = { sub: user.id, email: user.email, role: user.role };
-    const accessToken = await this.jwtService.signAsync(payload);
+    const accessToken: string = await this.jwtService.signAsync(payload);
     
     return {
       access_token: accessToken,
