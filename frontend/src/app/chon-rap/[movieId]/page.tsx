@@ -1,5 +1,11 @@
 import TheaterAndShowtimePicker from '@/components/TheaterAndShowtimePicker';
 
+interface PageProps {
+  params: { 
+    movieId: string 
+  };
+}
+
 async function getTheaters() {
   try {
     const res = await fetch('http://backend_service:8080/theaters', { cache: 'no-cache' });
@@ -11,7 +17,7 @@ async function getTheaters() {
   }
 }
 
-export default async function SelectTheaterPage({ params }: { params: { movieId: string } }) {
+export default async function SelectTheaterPage({ params }: PageProps) {
   const { movieId } = params;
   const theaters = await getTheaters();
 
