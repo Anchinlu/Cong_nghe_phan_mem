@@ -1,12 +1,14 @@
+import { Metadata, ResolvingMetadata } from 'next';
 import TheaterAndShowtimePicker from '@/components/TheaterAndShowtimePicker';
 
-export default async function SelectTheaterPage({
-  params,
-}: {
-  params: { movieId: string };
-}) {
-  const { movieId } = params;
+type Props = {
+  params: {
+    movieId: string;
+  };
+};
 
+export default async function SelectTheaterPage({ params }: Props) {
+  const { movieId } = params;
   const theaters = await getTheaters();
 
   return (
