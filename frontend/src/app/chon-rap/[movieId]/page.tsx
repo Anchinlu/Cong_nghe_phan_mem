@@ -1,21 +1,5 @@
+// frontend/src/app/chon-rap/[movieId]/page.tsx
 import TheaterAndShowtimePicker from '@/components/TheaterAndShowtimePicker';
-
-export default async function SelectTheaterPage({
-  params,
-}: {
-  params: { movieId: string };
-}) {
-  const { movieId } = params;
-
-  const theaters = await getTheaters();
-
-  return (
-    <div className="container mx-auto px-4 py-8 text-white">
-      <h1 className="text-3xl font-bold mb-8">Chọn Rạp & Suất Chiếu</h1>
-      <TheaterAndShowtimePicker initialTheaters={theaters} movieId={movieId} />
-    </div>
-  );
-}
 
 async function getTheaters() {
   try {
@@ -26,4 +10,16 @@ async function getTheaters() {
     console.error("Failed to fetch theaters", error);
     return [];
   }
+}
+
+export default async function SelectTheaterPage({ params }: { params: { movieId: string } }) {
+  const { movieId } = params;
+  const theaters = await getTheaters();
+
+  return (
+    <div className="container mx-auto px-4 py-8 text-white">
+      <h1 className="text-3xl font-bold mb-8">Chọn Rạp & Suất Chiếu</h1>
+      <TheaterAndShowtimePicker initialTheaters={theaters} movieId={movieId} />
+    </div>
+  );
 }

@@ -4,7 +4,14 @@ import TrailerPlayer from '@/components/TrailerPlayer';
 import ShowtimeList from '@/components/ShowtimeList';
 import Image from 'next/image';
 
-// Các interface và hàm fetch giữ nguyên
+interface Movie {
+  id: number; title: string; description: string; posterUrl?: string; trailerUrl?: string;
+  backdropUrl?: string; genre?: string; durationMinutes?: number; ageRating?: string;
+}
+interface Showtime {
+  id: number; start_time: string; auditorium: { name: string; theater: { name: string; }; };
+}
+
 async function getMovieById(id: string) {
     const res = await fetch(`http://backend_service:8080/movies/${id}`, { cache: 'no-cache' });
     if (!res.ok) return null;
@@ -25,7 +32,7 @@ export default async function MovieDetailPage({ params }: { params: { id: string
   ]);
 
   if (!movie) {
-    return <div className="text-white text-center pt-20">Không tìm thấy phim hoặc có lỗi xảy ra.</div>;
+    return <div className="text-white text-center pt-20">Không tìm thấy phim.</div>;
   }
 
   return (
