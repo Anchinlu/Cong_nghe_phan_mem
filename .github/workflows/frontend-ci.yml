@@ -1,12 +1,12 @@
-# file: .github/workflows/frontend-ci.yml
+# file: .github/workflows/frontend.yml
 
 name: Frontend CI
 
 on:
   push:
-    branches: [ "fix/ci-cd-lint-errors" ]
+    branches: [ "**" ]
   pull_request:
-    branches: [ "fix/ci-cd-lint-errors" ]
+    branches: [ "main", "master" ]
 
 jobs:
   build-and-test:
