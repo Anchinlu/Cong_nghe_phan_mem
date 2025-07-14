@@ -16,16 +16,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
+      // SỬA Ở ĐÂY: Xóa "async"
+      useFactory: (configService: ConfigService) => {
         const secret = configService.get('JWT_SECRET');
         if (!secret) {
           throw new Error('JWT_SECRET is not defined in the environment variables');
         }
         return {
-          secret: secret, // <-- Sử dụng biến đã được kiểm tra
-          signOptions: {
-            expiresIn: '1d',
-          },
+          secret: secret,
+          signOptions: { expiresIn: '1d' },
         };
       },
     }),

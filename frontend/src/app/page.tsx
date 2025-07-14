@@ -10,10 +10,8 @@ interface Movie {
   posterUrl?: string;
 }
 
-// Hàm lấy phim ĐANG CHIẾU
 async function getNowShowingMovies(): Promise<Movie[]> {
   try {
-    // SỬA Ở ĐÂY
     const res = await fetch(`http://backend_service:8080/movies?status=NOW_SHOWING`, { cache: 'no-cache' });
     if (!res.ok) return [];
     return res.json();
@@ -26,7 +24,7 @@ async function getNowShowingMovies(): Promise<Movie[]> {
 
 async function getUpcomingMovies(): Promise<Movie[]> {
   try {
-    // SỬA Ở ĐÂY
+   
     const res = await fetch(`http://backend_service:8080/movies?status=UPCOMING`, { cache: 'no-cache' });
     if (!res.ok) return [];
     return res.json();
@@ -37,7 +35,6 @@ async function getUpcomingMovies(): Promise<Movie[]> {
 }
 
 export default async function HomePage() {
-  // Gọi đồng thời cả hai hàm để tối ưu thời gian tải
   const [nowShowingMovies, upcomingMovies] = await Promise.all([
     getNowShowingMovies(),
     getUpcomingMovies(),
@@ -47,7 +44,6 @@ export default async function HomePage() {
     <div>
       <Hero />
       
-      {/* Truyền hai danh sách phim riêng biệt vào MovieTabs */}
       <MovieTabs 
         nowShowingMovies={nowShowingMovies}
         upcomingMovies={upcomingMovies}

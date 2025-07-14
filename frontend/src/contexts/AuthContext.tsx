@@ -18,45 +18,44 @@ interface AuthContextType {
   logout: () => void;
 }
 
-// Tạo Context
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Tạo Provider Component - "Bộ não" chính
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-  // Hàm này sẽ chạy một lần khi app được tải, để kiểm tra xem có token cũ trong localStorage không
+  
   useEffect(() => {
     const storedToken = localStorage.getItem('accessToken');
     if (storedToken) {
       try {
-        // Giải mã phần payload của token để lấy thông tin user
+        
         const payload = JSON.parse(atob(storedToken.split('.')[1]));
         setUser({ id: payload.sub, email: payload.email, role: payload.role });
         setToken(storedToken);
-      } catch (e) {
-        // Nếu token không hợp lệ, xóa nó đi
+      } catch { 
         localStorage.removeItem('accessToken');
       }
     }
   }, []);
 
   const login = (newToken: string) => {
-    // Lưu token vào localStorage để "ghi nhớ" đăng nhập
+   
     localStorage.setItem('accessToken', newToken);
     setToken(newToken);
     try {
-      // Giải mã token để lấy thông tin user và cập nhật state
+      
       const payload = JSON.parse(atob(newToken.split('.')[1]));
       setUser({ id: payload.sub, email: payload.email, role: payload.role });
-    } catch (e) {
+    } catch { 
       setUser(null);
     }
   };
 
   const logout = () => {
-    // Xóa token khỏi localStorage
+    
     localStorage.removeItem('accessToken');
     setToken(null);
     setUser(null);
