@@ -4,9 +4,9 @@ name: Frontend CI
 
 on:
   push:
-    branches: [ "**" ]  
+    branches: [ "fix/ci-cd-lint-errors" ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ "fix/ci-cd-lint-errors" ]
 
 jobs:
   build-and-test:

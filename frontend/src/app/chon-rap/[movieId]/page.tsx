@@ -11,13 +11,7 @@ async function getTheaters() {
   }
 }
 
-type Props = {
-  params: {
-    movieId: string;
-  };
-};
-
-export default async function SelectTheaterPage({ params }: Props) {
+export default async function SelectTheaterPage({ params }: { params: { movieId: string } }) {
   const { movieId } = params;
   const theaters = await getTheaters();
 
