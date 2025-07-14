@@ -12,12 +12,10 @@ interface Theater {
   address: string;
   city: string;
 }
+
 interface Showtime {
   id: number;
   start_time: string;
-  auditorium: {
-    format: string;
-  };
 }
 
 interface PickerProps {
@@ -28,20 +26,20 @@ interface PickerProps {
 const formatDate = (date: Date): string => date.toISOString().split('T')[0];
 
 export default function TheaterAndShowtimePicker({ initialTheaters, movieId }: PickerProps) {
-  const [theaters, setTheaters] = useState<Theater[]>(initialTheaters);
+
   const [selectedDate, setSelectedDate] = useState<string>(formatDate(new Date()));
   const [selectedCity, setSelectedCity] = useState<string>('Tất cả');
   const [selectedTheater, setSelectedTheater] = useState<Theater | null>(null);
   const [showtimes, setShowtimes] = useState<Showtime[]>([]);
   const [isLoadingShowtimes, setIsLoadingShowtimes] = useState(false);
   
-  const cities = useMemo(() => ['Tất cả', ...new Set(theaters.map(t => t.city))], [theaters]);
-  const filteredTheaters = useMemo(() => {
-    if (selectedCity === 'Tất cả') return theaters;
-    return theaters.filter(t => t.city === selectedCity);
-  }, [theaters, selectedCity]);
+  const cities = useMemo(() => ['Tất cả', ...new Set(initialTheaters.map(t => t.city))], [initialTheaters]);
 
-  // Lấy danh sách suất chiếu khi người dùng chọn một rạp hoặc ngày
+  const filteredTheaters = useMemo(() => {
+    if (selectedCity === 'Tất cả') return initialTheaters;
+    return initialTheaters.filter(t => t.city === selectedCity);
+  }, [initialTheaters, selectedCity]);
+
   useEffect(() => {
     if (selectedTheater) {
       setIsLoadingShowtimes(true);

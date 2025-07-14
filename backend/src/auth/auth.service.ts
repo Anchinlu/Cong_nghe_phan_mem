@@ -1,6 +1,6 @@
 // backend/src/auth/auth.service.ts
 import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt'; 
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
@@ -8,7 +8,6 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
 
-// Định nghĩa một kiểu dữ liệu cho user trả về, không chứa password
 type SafeUser = Omit<User, 'password'>;
 
 @Injectable()
@@ -38,7 +37,7 @@ export class AuthService {
     
     await this.usersRepository.save(newUser);
 
-    const { password: _, ...result } = newUser; 
+    const { password: _, ...result } = newUser;
     return result;
   }
 
