@@ -3,6 +3,7 @@ import SeatPicker from "@/components/SeatPicker";
 import React from 'react';
 export const dynamicParams = true;
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 async function getSeatLayout(showtimeId: string) {
 
