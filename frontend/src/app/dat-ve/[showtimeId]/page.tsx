@@ -1,20 +1,28 @@
 import SeatPicker from "@/components/SeatPicker";
-import React from 'react';
 
-export const dynamic = "force-dynamic";
-export const dynamicParams = true;
-export const fetchCache = "force-no-store";
-
-async function getSeatLayout(showtimeId: string) {
-
-    const res = await fetch(`http://backend_service:8080/showtimes/${showtimeId}/seats`, { cache: 'no-cache' });
-    if (!res.ok) return null;
-    return res.json();
-    
+interface SeatLayoutData {
+    seatLayout: {
+        rows: number;
+        cols: number;
+        unavailable?: { row: number; col: number }[];
+    };
+    bookedSeats: { row: number; col: number }[];
 }
 
-export default async function BookingPage({ params }: { params: { showtimeId: string } }) {
-  const { showtimeId } = params;
+async function getSeatLayout(showtimeId: string): Promise<SeatLayoutData | null> {
+    try {
+        const res = await fetch(`http://backend_service:8080/showtimes/${showtimeId}/seats`, { cache: 'no-cache' });
+        if (!res.ok) return null;
+        return res.json();
+    } catch (error) {
+        console.error('Failed to fetch seat layout:', error);
+        return null;
+    }
+}
+
+export default async function BookingPage({ params }: { params: Promise<{ showtimeId: string }> }) {
+  const { showtimeId } = await params; 
+
   const seatData = await getSeatLayout(showtimeId);
 
   if (!seatData) {

@@ -1,23 +1,31 @@
-// frontend/src/app/phim/[id]/page.tsx
 import Link from 'next/link';
 import TrailerPlayer from '@/components/TrailerPlayer';
 import ShowtimeList from '@/components/ShowtimeList';
 import Image from 'next/image';
 
-async function getMovieById(id: string) {
+interface Movie {
+  id: number; title: string; description: string; posterUrl?: string; trailerUrl?: string;
+  backdropUrl?: string; genre?: string; durationMinutes?: number; ageRating?: string;
+}
+interface Showtime {
+  id: number; start_time: string; auditorium: { name: string; theater: { name: string; }; };
+}
+
+async function getMovieById(id: string): Promise<Movie | null> {
     const res = await fetch(`http://backend_service:8080/movies/${id}`, { cache: 'no-cache' });
     if (!res.ok) return null;
     return res.json();
 }
-async function getShowtimesByMovieId(id: string) {
+
+async function getShowtimesByMovieId(id: string): Promise<Showtime[]> {
     const res = await fetch(`http://backend_service:8080/movies/${id}/showtimes`, { cache: 'no-cache' });
     if (!res.ok) return [];
     return res.json();
 }
 
+export default async function MovieDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params; // ✅ BẮT BUỘC await params
 
-export default async function MovieDetailPage({ params }: { params: { id: string } }) {
-  const { id } = params;
   const [movie, showtimes] = await Promise.all([
     getMovieById(id),
     getShowtimesByMovieId(id),
@@ -30,7 +38,15 @@ export default async function MovieDetailPage({ params }: { params: { id: string
   return (
     <div className="bg-black min-h-screen text-white">
       <div className="relative h-[56.25vw] max-h-[80vh] bg-gray-900">
-        {movie.backdropUrl && <Image src={movie.backdropUrl} alt={`Backdrop of ${movie.title}`} layout="fill" objectFit="cover" className="opacity-50" priority />}
+        {movie.backdropUrl && (
+            <Image 
+                src={movie.backdropUrl} 
+                alt={`Backdrop of ${movie.title}`} 
+                fill
+                className="object-cover opacity-50"
+                priority
+            />
+        )}
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
           <TrailerPlayer trailerUrl={movie.trailerUrl} />
         </div>
@@ -38,7 +54,15 @@ export default async function MovieDetailPage({ params }: { params: { id: string
       <div className="container mx-auto p-8 md:p-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           <div className="md:col-span-3">
-            {movie.posterUrl && <Image src={movie.posterUrl} alt={`Poster of ${movie.title}`} width={500} height={750} className="rounded-lg w-full h-auto mb-4" />}
+            {movie.posterUrl && (
+                <Image 
+                    src={movie.posterUrl} 
+                    alt={`Poster of ${movie.title}`} 
+                    width={500} 
+                    height={750}
+                    className="rounded-lg w-full h-auto mb-4" 
+                />
+            )}
             <Link href={`/chon-rap/${movie.id}`} className="w-full bg-sky-500 text-white text-center font-bold py-3 rounded-lg hover:bg-sky-600 transition-colors text-lg block">
               Đặt Vé
             </Link>
