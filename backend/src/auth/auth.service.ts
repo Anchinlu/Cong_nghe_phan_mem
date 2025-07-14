@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, ConflictException, UnauthorizedException, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -25,18 +25,24 @@ export class AuthService {
       throw new ConflictException('Địa chỉ email này đã được sử dụng');
     }
 
-    const salt: string = await bcrypt.genSalt();
-    const hashedPassword: string = await bcrypt.hash(password, salt);
+    let salt: string;
+    let hashedPassword: string;
+    try {
+      salt = await bcrypt.genSalt();
+      hashedPassword = await bcrypt.hash(password, salt);
+    } catch (error) {
+      throw new InternalServerErrorException('Không thể mã hóa mật khẩu');
+    }
 
     const newUser = this.usersRepository.create({
       email,
       password: hashedPassword,
       fullName,
     });
-    
+
     await this.usersRepository.save(newUser);
 
-    const { password: _, ...result } = newUser; 
+    const { password: omitPassword, ...result } = newUser;
     return result;
   }
 
@@ -44,15 +50,24 @@ export class AuthService {
     const { email, password } = loginUserDto;
     const user = await this.usersRepository.findOneBy({ email });
 
-    const isMatch: boolean = user ? await bcrypt.compare(password, user.password) : false;
-
-    if (!user || !isMatch) {
+    if (!user) {
       throw new UnauthorizedException('Thông tin đăng nhập không hợp lệ');
     }
-    
+
+    let isMatch: boolean;
+    try {
+      isMatch = await bcrypt.compare(password, user.password);
+    } catch (error) {
+      throw new InternalServerErrorException('Lỗi khi kiểm tra mật khẩu');
+    }
+
+    if (!isMatch) {
+      throw new UnauthorizedException('Thông tin đăng nhập không hợp lệ');
+    }
+
     const payload = { sub: user.id, email: user.email, role: user.role };
     const accessToken: string = await this.jwtService.signAsync(payload);
-    
+
     return {
       access_token: accessToken,
     };

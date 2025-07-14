@@ -21,9 +21,9 @@ async function getTheaters() {
 
 export default async function SelectTheaterPage(props: SelectTheaterPageProps) {
 
-  const { params } = await Promise.resolve(props);
+  const { params } = props;
   const { movieId } = params;
-
+  
   const theaters = await getTheaters();
 
   return (
