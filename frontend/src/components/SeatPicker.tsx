@@ -83,8 +83,12 @@ export default function SeatPicker({ seatLayout, bookedSeats, showtimeId }: Seat
 
       router.push('/');
 
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) { 
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Một lỗi không xác định đã xảy ra.');
+      }
     } finally {
       setIsLoading(false);
     }

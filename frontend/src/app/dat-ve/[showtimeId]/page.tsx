@@ -2,16 +2,6 @@
 import SeatPicker from "@/components/SeatPicker";
 import React from 'react';
 
-// Định nghĩa kiểu dữ liệu trả về từ API
-interface SeatLayoutData {
-  seatLayout: {
-    rows: number;
-    cols: number;
-    unavailable?: { row: number; col: number }[];
-  };
-  bookedSeats: { row: number; col: number }[];
-}
-
 // Hàm gọi API lấy sơ đồ ghế
 async function getSeatLayout(showtimeId: string) {
     const res = await fetch(`http://backend_service:8080/showtimes/${showtimeId}/seats`, { cache: 'no-cache' });
