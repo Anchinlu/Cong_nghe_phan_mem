@@ -1,8 +1,10 @@
 import TheaterAndShowtimePicker from '@/components/TheaterAndShowtimePicker';
 
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
   params: { 
-    movieId: string 
+    movieId: string;
   };
 }
 
