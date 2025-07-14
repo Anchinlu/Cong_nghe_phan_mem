@@ -37,7 +37,7 @@ export class AuthService {
     
     await this.usersRepository.save(newUser);
 
-    return omit(newUser, ['password']);
+    return omit(newUser, ['password']) as SafeUser;
   }
 
   async login(loginUserDto: LoginUserDto): Promise<{ access_token: string }> {
