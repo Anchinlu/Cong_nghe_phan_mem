@@ -13,7 +13,7 @@ export class BookedSeat {
 
   @Column()
   seat_number: number;
-  
+
   @ManyToOne('Booking', (booking: Booking) => booking.seats)
   @JoinColumn({ name: 'booking_id' })
   booking: Booking;

@@ -4,6 +4,6 @@ import { AuditoriumsService } from './auditoriums.service';
 
 @Module({
   controllers: [AuditoriumsController],
-  providers: [AuditoriumsService]
+  providers: [AuditoriumsService],
 })
 export class AuditoriumsModule {}

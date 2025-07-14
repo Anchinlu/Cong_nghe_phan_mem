@@ -1,4 +1,3 @@
-// backend/src/auth/jwt.strategy.ts
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -6,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
+import { omit } from 'lodash';
 
 export type UserPayload = Omit<User, 'password'>;
 
@@ -30,7 +30,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException();
     }
-    const { password: _, ...result } = user;
-    return result;
+
+    return omit(user, ['password']); 
   }
 }

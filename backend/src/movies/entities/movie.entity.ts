@@ -20,7 +20,6 @@ export class Movie {
   @Column({ name: 'poster_url', type: 'varchar', nullable: true })
   posterUrl: string;
 
-  
   @Column({ nullable: true })
   genre: string;
 

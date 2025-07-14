@@ -1,4 +1,3 @@
-// backend/src/auth/auth.service.ts
 import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt'; 
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +6,7 @@ import { User } from '../users/entities/user.entity';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
+import { omit } from 'lodash'; 
 
 type SafeUser = Omit<User, 'password'>;
 
@@ -37,8 +37,7 @@ export class AuthService {
     
     await this.usersRepository.save(newUser);
 
-    const { password: _, ...result } = newUser; 
-    return result;
+    return omit(newUser, ['password']);
   }
 
   async login(loginUserDto: LoginUserDto): Promise<{ access_token: string }> {

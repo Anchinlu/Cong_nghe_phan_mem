@@ -12,10 +12,10 @@ import { AuthModule } from '../auth/auth.module';
   imports: [
     TypeOrmModule.forFeature([Booking, BookedSeat]),
     forwardRef(() => ShowtimesModule),
-    AuthModule, 
+    AuthModule,
   ],
   controllers: [BookingsController],
   providers: [BookingsService],
-  exports: [TypeOrmModule]
+  exports: [TypeOrmModule],
 })
 export class BookingsModule {}

@@ -31,24 +31,24 @@ import { BookedSeat } from './bookings/entities/booked-seat.entity';
       host: process.env.DATABASE_HOST,
       port: parseInt(process.env.DATABASE_PORT!, 10),
       username: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD, 
+      password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      
+
       entities: [
-        Movie, 
-        User, 
-        Theater, 
-        Auditorium, 
-        Showtime, 
-        Booking, 
-        BookedSeat
+        Movie,
+        User,
+        Theater,
+        Auditorium,
+        Showtime,
+        Booking,
+        BookedSeat,
       ],
-      
+
       synchronize: true,
     }),
 
     MoviesModule,
-    
+
     AuthModule,
     TheatersModule,
     AuditoriumsModule,

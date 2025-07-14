@@ -7,7 +7,7 @@ import { Theater } from './entities/theater.entity';
 import { Showtime } from '../showtimes/entities/showtime.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Theater, Showtime])], 
+  imports: [TypeOrmModule.forFeature([Theater, Showtime])],
   controllers: [TheatersController],
   providers: [TheatersService],
 })
