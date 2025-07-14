@@ -31,6 +31,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
 
-  return omit<User, 'password'>(user, ['password']) as UserPayload;
+    const safeUser = omit<User, 'password'>(user, ['password']) as UserPayload;
+    return safeUser;
   }
 }

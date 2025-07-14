@@ -6,7 +6,7 @@ import { User } from '../users/entities/user.entity';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
-import { omit } from 'lodash'; 
+import { omit } from 'lodash';
 
 type SafeUser = Omit<User, 'password'>;
 
@@ -37,7 +37,8 @@ export class AuthService {
     
     await this.usersRepository.save(newUser);
 
-    return omit<User, 'password'>(newUser, ['password']) as SafeUser;
+    const safeUser = omit<User, 'password'>(newUser, ['password']) as SafeUser;
+    return safeUser;
   }
 
   async login(loginUserDto: LoginUserDto): Promise<{ access_token: string }> {
