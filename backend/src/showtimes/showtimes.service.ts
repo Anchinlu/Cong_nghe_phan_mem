@@ -1,7 +1,7 @@
 // backend/src/showtimes/showtimes.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThanOrEqual, MoreThan, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Showtime } from './entities/showtime.entity';
 import { Booking } from '../bookings/entities/booking.entity';
 

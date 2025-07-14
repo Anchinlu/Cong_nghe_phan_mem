@@ -7,37 +7,28 @@ import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 
-// Định nghĩa một kiểu mới không chứa mật khẩu
-export type UserPayload = Omit<User, 'password'>;
-
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    private configService: ConfigService,
+    configService: ConfigService,
   ) {
-    const secret = configService.get('JWT_SECRET');
+    const secret = configService.get<string>('JWT_SECRET');
     if (!secret) {
-      throw new Error('JWT_SECRET is not defined in the environment variables');
+      throw new Error('JWT_SECRET is not defined');
     }
-
     super({
-      secretOrKey: secret,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: secret,
     });
   }
 
-  // SỬA Ở ĐÂY: Thay đổi kiểu dữ liệu trả về
-  async validate(payload: { sub: number; email: string }): Promise<UserPayload> {
-    const { sub: id } = payload;
-    const user = await this.usersRepository.findOneBy({ id });
-
+  async validate(payload: { sub: number; email: string }): Promise<Omit<User, 'password'>> {
+    const user = await this.usersRepository.findOneBy({ id: payload.sub });
     if (!user) {
       throw new UnauthorizedException();
     }
-
-    // Loại bỏ mật khẩu trước khi trả về
     const { password, ...result } = user;
     return result;
   }
