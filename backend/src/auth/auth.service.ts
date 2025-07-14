@@ -30,7 +30,7 @@ export class AuthService {
     try {
       salt = await bcrypt.genSalt();
       hashedPassword = await bcrypt.hash(password, salt);
-    } catch (error) {
+    } catch {
       throw new InternalServerErrorException('Không thể mã hóa mật khẩu');
     }
 
@@ -42,7 +42,7 @@ export class AuthService {
 
     await this.usersRepository.save(newUser);
 
-    const { password: omitPassword, ...result } = newUser;
+    const { password: _, ...result } = newUser;
     return result;
   }
 
@@ -57,7 +57,7 @@ export class AuthService {
     let isMatch: boolean;
     try {
       isMatch = await bcrypt.compare(password, user.password);
-    } catch (error) {
+    } catch {
       throw new InternalServerErrorException('Lỗi khi kiểm tra mật khẩu');
     }
 

@@ -2,12 +2,10 @@
 import TheaterAndShowtimePicker from '@/components/TheaterAndShowtimePicker';
 import React from 'react';
 
-// Định nghĩa kiểu dữ liệu cho props một cách tường minh
-interface SelectTheaterPageProps {
+interface PageProps {
   params: { movieId: string };
 }
 
-// Hàm để lấy danh sách rạp từ backend
 async function getTheaters() {
   try {
     const res = await fetch('http://backend_service:8080/theaters', { cache: 'no-cache' });
@@ -19,11 +17,9 @@ async function getTheaters() {
   }
 }
 
-export default async function SelectTheaterPage(props: SelectTheaterPageProps) {
-
-  const { params } = props;
+// Cách viết đúng cho Next.js app router:
+export default async function Page({ params }: PageProps) {
   const { movieId } = params;
-  
   const theaters = await getTheaters();
 
   return (
