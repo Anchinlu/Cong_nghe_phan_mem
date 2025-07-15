@@ -33,4 +33,25 @@ export class TheatersService {
             .orderBy('showtime.start_time', 'ASC')
             .getMany();
     }
+    async findOne(id: number): Promise<Theater | null> {
+        return this.theatersRepository.findOneBy({ id });
+    }
+
+    async findShowtimesByDate(theaterId: number, date: string): Promise<Showtime[]> {
+    const startDate = new Date(date);
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date(date);
+    endDate.setHours(23, 59, 59, 999);
+
+    return this.showtimesRepository
+        .createQueryBuilder('showtime')
+        .innerJoinAndSelect('showtime.movie', 'movie')
+        .innerJoinAndSelect('showtime.auditorium', 'auditorium')  // <-- Thêm andSelect để lấy cả format
+        .where('auditorium.theater_id = :theaterId', { theaterId })
+        .andWhere('showtime.start_time BETWEEN :startDate AND :endDate', { startDate, endDate })
+        .orderBy('movie.title', 'ASC')
+        .addOrderBy('showtime.start_time', 'ASC')
+        .getMany();
+}
 }
