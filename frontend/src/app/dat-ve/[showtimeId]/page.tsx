@@ -1,4 +1,7 @@
 // frontend/src/app/dat-ve/[showtimeId]/page.tsx
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import SeatPicker from "@/components/SeatPicker";
 import React from 'react';
 
@@ -21,7 +24,7 @@ async function getSeatLayout(showtimeId: string) {
 }
 
 export default async function BookingPage({ params }: { params: { showtimeId: string } }) {
-  const { showtimeId } = params; 
+  const { showtimeId } = await Promise.resolve(params);
   const seatData = await getSeatLayout(showtimeId);
 
   if (!seatData) {

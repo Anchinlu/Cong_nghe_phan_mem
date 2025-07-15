@@ -1,4 +1,7 @@
 // frontend/src/app/phim/[id]/page.tsx
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import Link from 'next/link';
 import TrailerPlayer from '@/components/TrailerPlayer';
 import ShowtimeList from '@/components/ShowtimeList'; 
@@ -45,7 +48,7 @@ async function getShowtimesByMovieId(id: string) {
 }
 
 export default async function MovieDetailPage({ params }: { params: { id: string } }) {
-  const { id } = params; 
+  const { id } = await Promise.resolve(params);
 
   const [movie, showtimes] = await Promise.all([
     getMovieById(id),
