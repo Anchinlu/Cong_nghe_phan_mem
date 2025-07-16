@@ -7,14 +7,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  
   app.enableCors();
 
-const config = new DocumentBuilder()
+  const config = new DocumentBuilder()
     .setTitle('CineBooking API')
     .setDescription('Tài liệu API cho dự án đặt vé xem phim CineBooking')
     .setVersion('1.0')
-    .addBearerAuth() 
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

@@ -2,23 +2,21 @@
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThanOrEqual, MoreThan, Repository } from 'typeorm'; 
+import { LessThanOrEqual, MoreThan, Repository } from 'typeorm';
 import { Movie } from './entities/movie.entity';
 
 @Injectable()
 export class MoviesService {
-  
   constructor(
-    @InjectRepository(Movie) 
+    @InjectRepository(Movie)
     private moviesRepository: Repository<Movie>,
   ) {}
 
   findAll(status?: string): Promise<Movie[]> {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); 
+    today.setHours(0, 0, 0, 0);
 
     if (status === 'NOW_SHOWING') {
-     
       return this.moviesRepository.find({
         where: {
           releaseDate: LessThanOrEqual(today),
@@ -27,7 +25,6 @@ export class MoviesService {
     }
 
     if (status === 'UPCOMING') {
-      
       return this.moviesRepository.find({
         where: {
           releaseDate: MoreThan(today),
@@ -38,8 +35,7 @@ export class MoviesService {
     return this.moviesRepository.find();
   }
 
-  
   findOne(id: number): Promise<Movie | null> {
-  return this.moviesRepository.findOneBy({ id });
+    return this.moviesRepository.findOneBy({ id });
   }
 }

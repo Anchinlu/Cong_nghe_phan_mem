@@ -2,7 +2,7 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { TicketPricesService } from './ticket-prices.service';
 
-@Controller('theaters/:theaterId/prices') 
+@Controller('theaters/:theaterId/prices')
 export class TicketPricesController {
   constructor(private readonly ticketPricesService: TicketPricesService) {}
 

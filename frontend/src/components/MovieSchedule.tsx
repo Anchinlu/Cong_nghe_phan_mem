@@ -4,6 +4,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import DatePicker from './DatePicker';
+import Image from 'next/image';
 
 // Định nghĩa các kiểu dữ liệu
 interface Showtime {
@@ -73,7 +74,14 @@ export default function MovieSchedule({ theaterId }: { theaterId: number }) {
           {Object.values(moviesByDate).map(({ details, formats }) => (
             <div key={details.id} className="flex flex-col md:flex-row gap-6 border-b border-gray-700 pb-8 last:border-b-0">
               <div className="w-full md:w-40 flex-shrink-0">
-                <img src={details.posterUrl} alt={details.title} className="w-full h-auto object-cover rounded-md" />
+               <Image
+                  src={details.posterUrl || '/fallback.jpg'}
+                  alt={details.title}
+                  fill
+                  className="object-cover rounded-md"
+                  sizes="(max-width: 768px) 100vw, 160px"
+                  priority
+                />
               </div>
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-white mb-2">{details.title}</h3>

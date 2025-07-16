@@ -1,5 +1,12 @@
 // backend/src/bookings/bookings.controller.ts
-import { Controller, Post, Body, UseGuards, ValidationPipe, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  ValidationPipe,
+  Get,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
@@ -14,17 +21,16 @@ export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt')) 
+  @UseGuards(AuthGuard('jwt'))
   create(
     @Body(new ValidationPipe()) createBookingDto: CreateBookingDto,
-    @GetUser() user: User, 
+    @GetUser() user: User,
   ) {
-    
     return this.bookingsService.create(createBookingDto, user);
   }
 
   @Get('/my-history')
-  @UseGuards(AuthGuard('jwt')) 
+  @UseGuards(AuthGuard('jwt'))
   findUserBookings(@GetUser() user: User) {
     return this.bookingsService.findForUser(user);
   }

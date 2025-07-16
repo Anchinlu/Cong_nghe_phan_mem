@@ -1,6 +1,10 @@
 // backend/src/auth/auth.service.ts
-import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt'; 
+import {
+  Injectable,
+  ConflictException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
@@ -31,11 +35,11 @@ export class AuthService {
       password: hashedPassword,
       fullName,
     });
-    
+
     await this.usersRepository.save(newUser);
 
     // THAY ĐỔI Ở ĐÂY
-    const { password: _, ...result } = newUser; 
+    const { password: _, ...result } = newUser;
     return result;
   }
   async login(loginUserDto: LoginUserDto) {

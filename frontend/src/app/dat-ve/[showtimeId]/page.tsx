@@ -2,18 +2,8 @@
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+import { use } from 'react';
 import SeatPicker from "@/components/SeatPicker";
-import React from 'react';
-
-// Định nghĩa kiểu dữ liệu trả về từ API
-interface SeatLayoutData {
-  seatLayout: {
-    rows: number;
-    cols: number;
-    unavailable?: { row: number; col: number }[];
-  };
-  bookedSeats: { row: number; col: number }[];
-}
 
 // Hàm gọi API lấy sơ đồ ghế
 async function getSeatLayout(showtimeId: string) {
@@ -24,13 +14,14 @@ async function getSeatLayout(showtimeId: string) {
 }
 
 interface PageProps {
-  params: { showtimeId: string }
+  params: Promise<{ showtimeId: string }>
 }
 
-export default async function BookingPage({ params }: PageProps) {
-  const { showtimeId } = await Promise.resolve(params);
+export default function BookingPage({ params }: PageProps) {
+  const { showtimeId } = use(params); 
 
-  const seatData = await getSeatLayout(showtimeId);
+  const seatDataPromise = getSeatLayout(showtimeId);
+  const seatData = use(seatDataPromise);
 
   if (!seatData || typeof seatData.ticketPrice !== 'number') {
     return <div className="text-white text-center pt-20">Không thể tải thông tin suất chiếu hoặc giá vé.</div>;

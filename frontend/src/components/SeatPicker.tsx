@@ -79,16 +79,18 @@ export default function SeatPicker({ seatLayout, bookedSeats, showtimeId, ticket
         throw new Error(errorData.message || 'Đặt vé không thành công.');
       }
 
-      const bookingResult = await res.json();
+      await res.json();
       alert(`Đặt vé thành công! Vui lòng kiểm tra Email để biết mã vé`);
 
       router.push('/');
 
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
+    } catch (err: unknown) {
+  if (err instanceof Error) {
+    setError(err.message);
+  } else {
+    setError('Đã xảy ra lỗi không xác định.');
+  }
+}
   };
 
   return (

@@ -22,24 +22,28 @@ export default function RegisterPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        // Gửi đi cả fullName
+       
         body: JSON.stringify({ fullName, email, password }),
       });
 
       const data = await res.json();
       if (!res.ok) {
-        // Lỗi có thể là mảng, ta chỉ lấy lỗi đầu tiên để hiển thị
+       
         const errorMessage = Array.isArray(data.message) ? data.message[0] : data.message;
         throw new Error(errorMessage || 'Đã có lỗi xảy ra khi đăng ký.');
       }
 
-      // --- ĐĂNG KÝ THÀNH CÔNG ---
+     
       alert('Đăng ký thành công! Vui lòng đăng nhập.');
-      router.push('/dang-nhap'); // Chuyển người dùng đến trang đăng nhập
+      router.push('/dang-nhap');
 
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+    if (err instanceof Error) {
+        setError(err.message);
+    } else {
+        setError('Đã có lỗi xảy ra.');
     }
+}
   };
 
   return (

@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MailerModule } from '@nestjs-modules/mailer'; 
+import { MailerModule } from '@nestjs-modules/mailer';
 
 // Import các module chức năng
 import { MoviesModule } from './movies/movies.module';
@@ -39,12 +39,20 @@ import { TicketPrice } from './ticket-prices/entities/ticket-price.entity';
         username: configService.get<string>('DATABASE_USERNAME'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
-        entities: [ Movie, User, Theater, Auditorium, Showtime, Booking, BookedSeat, TicketPrice ],
+        entities: [
+          Movie,
+          User,
+          Theater,
+          Auditorium,
+          Showtime,
+          Booking,
+          BookedSeat,
+          TicketPrice,
+        ],
         synchronize: true,
       }),
     }),
-    
-  
+
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -62,8 +70,7 @@ import { TicketPrice } from './ticket-prices/entities/ticket-price.entity';
         },
       }),
     }),
-    
-  
+
     MoviesModule,
     AuthModule,
     TheatersModule,
@@ -71,7 +78,6 @@ import { TicketPrice } from './ticket-prices/entities/ticket-price.entity';
     ShowtimesModule,
     BookingsModule,
     TicketPricesModule,
-    
   ],
   controllers: [AppController],
   providers: [AppService],

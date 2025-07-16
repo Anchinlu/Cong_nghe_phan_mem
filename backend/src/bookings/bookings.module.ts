@@ -13,10 +13,10 @@ import { TicketPrice } from '../ticket-prices/entities/ticket-price.entity';
   imports: [
     TypeOrmModule.forFeature([Booking, BookedSeat, TicketPrice]),
     forwardRef(() => ShowtimesModule),
-    AuthModule, 
+    AuthModule,
   ],
   controllers: [BookingsController],
   providers: [BookingsService],
-  exports: [TypeOrmModule]
+  exports: [TypeOrmModule],
 })
 export class BookingsModule {}

@@ -1,6 +1,7 @@
 // file: frontend/src/components/MovieCard.tsx
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Movie {
   id: number;
@@ -17,7 +18,14 @@ export default function MovieCard({ movie }: { movie: Movie }) {
       <Link href={`/phim/${movie.id}`}>
         <div className="relative w-full h-96 bg-gray-700 cursor-pointer">
           {movie.posterUrl ? (
-            <img src={movie.posterUrl} alt={`Poster of ${movie.title}`} className="w-full h-full object-cover" />
+            <Image 
+              src={movie.posterUrl}
+              alt={`Poster of ${movie.title}`}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 33vw"
+              priority
+            />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <span className="text-gray-500">No Poster</span>

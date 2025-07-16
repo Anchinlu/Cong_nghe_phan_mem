@@ -1,5 +1,11 @@
 // backend/src/ticket-prices/entities/ticket-price.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Theater } from '../../theaters/entities/theater.entity';
 
 @Entity('ticket_prices')

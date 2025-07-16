@@ -13,7 +13,7 @@ export class Theater {
   @Column()
   address: string;
 
-  @Column({ default: 'TP. HCM' }) 
+  @Column({ default: 'TP. HCM' })
   city: string;
 
   @OneToMany(() => Auditorium, (auditorium) => auditorium.theater)

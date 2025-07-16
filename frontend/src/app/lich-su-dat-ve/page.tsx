@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import Image from 'next/image';
 
 // Định nghĩa các kiểu dữ liệu
 interface Booking {
@@ -42,8 +43,13 @@ export default function BookingHistoryPage() {
         }
         const data = await res.json();
         setBookings(data);
-      } catch (err: any) {
-        setError(err.message);
+
+       } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('Đã xảy ra lỗi không xác định.');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -69,7 +75,13 @@ export default function BookingHistoryPage() {
         <div className="space-y-6">
           {bookings.map(booking => (
             <div key={booking.id} className="bg-gray-800 rounded-lg p-6 flex flex-col md:flex-row gap-6">
-              <img src={booking.showtime.movie.posterUrl} alt={booking.showtime.movie.title} className="w-full md:w-32 h-auto object-cover rounded-md" />
+              <Image 
+                src={booking.showtime.movie.posterUrl} 
+                alt={booking.showtime.movie.title} 
+                width={128} 
+                height={192} 
+                className="w-full md:w-32 h-auto object-cover rounded-md"
+              />
               
               <div className="text-gray-300">
                 <h2 className="text-xl font-bold text-white">{booking.showtime.movie.title}</h2>

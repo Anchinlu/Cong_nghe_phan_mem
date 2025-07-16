@@ -9,11 +9,11 @@ import { BookingsModule } from '../bookings/bookings.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Showtime]),
-    forwardRef(() => BookingsModule), 
+    forwardRef(() => BookingsModule),
   ],
   controllers: [ShowtimesController],
   providers: [ShowtimesService],
- 
-  exports: [ShowtimesService, TypeOrmModule], 
+
+  exports: [ShowtimesService, TypeOrmModule],
 })
 export class ShowtimesModule {}

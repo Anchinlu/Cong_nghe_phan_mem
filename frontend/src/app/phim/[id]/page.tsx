@@ -1,4 +1,3 @@
-// frontend/src/app/phim/[id]/page.tsx
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
@@ -6,6 +5,7 @@ import Link from 'next/link';
 import TrailerPlayer from '@/components/TrailerPlayer';
 import ShowtimeList from '@/components/ShowtimeList'; 
 import React from 'react';
+import Image from 'next/image';
 
 // Định nghĩa các kiểu dữ liệu
 interface Movie {
@@ -34,17 +34,16 @@ interface Showtime {
 }
 
 // Hàm lấy thông tin phim
-async function getMovieById(id: string) {
+async function getMovieById(id: string): Promise<Movie | null> {
     const res = await fetch(`http://backend_service:8080/movies/${id}`, { cache: 'no-cache' });
     if (!res.ok) return null;
     return res.json();
 }
 
-async function getShowtimesByMovieId(id: string) {
+async function getShowtimesByMovieId(id: string): Promise<Showtime[]> {
     const res = await fetch(`http://backend_service:8080/movies/${id}/showtimes`, { cache: 'no-cache' });
     if (!res.ok) return [];
     return res.json();
-    
 }
 
 export default async function MovieDetailPage({ params }: { params: { id: string } }) {
@@ -63,11 +62,15 @@ export default async function MovieDetailPage({ params }: { params: { id: string
     <div className="bg-black min-h-screen text-white">
       {/* Phần Trailer */}
       <div className="relative h-[56.25vw] max-h-[80vh] bg-gray-900">
-        <img src={movie.backdropUrl || movie.posterUrl || ''} alt={`Backdrop of ${movie.title}`} className="w-full h-full object-cover opacity-50" />
+        <Image 
+          src={movie.backdropUrl || movie.posterUrl || '/fallback.jpg'} 
+          alt={`Backdrop of ${movie.title}`} 
+          fill
+          className="object-cover opacity-50"
+          priority
+        />
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-
           <TrailerPlayer trailerUrl={movie.trailerUrl} />
-  
         </div>
       </div>
 
@@ -76,7 +79,13 @@ export default async function MovieDetailPage({ params }: { params: { id: string
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           {/* Cột trái: Poster và Nút đặt vé */}
           <div className="md:col-span-3">
-            <img src={movie.posterUrl || ''} alt={`Poster of ${movie.title}`} className="rounded-lg w-full mb-4" />
+            <Image 
+              src={movie.posterUrl || '/fallback.jpg'} 
+              alt={`Poster of ${movie.title}`} 
+              width={300}
+              height={450}
+              className="rounded-lg w-full mb-4 object-cover"
+            />
             <Link href={`/dat-ve/${movie.id}`} className="w-full bg-sky-500 text-white text-center font-bold py-3 rounded-lg hover:bg-sky-600 transition-colors text-lg block">
               Đặt Vé
             </Link>
@@ -94,7 +103,7 @@ export default async function MovieDetailPage({ params }: { params: { id: string
             <h2 className="text-xl font-bold mt-8 mb-2">Nội dung phim</h2>
             <p className="text-gray-300 leading-relaxed">{movie.description}</p>
             
-            {/* 2. Thêm component Lịch chiếu vào đây */}
+            {/* Lịch chiếu */}
             <ShowtimeList showtimes={showtimes} />
           </div>
         </div>

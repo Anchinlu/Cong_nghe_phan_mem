@@ -29,7 +29,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   // SỬA Ở ĐÂY: Thay đổi kiểu dữ liệu trả về
-  async validate(payload: { sub: number; email: string }): Promise<UserPayload> {
+  async validate(payload: {
+    sub: number;
+    email: string;
+  }): Promise<UserPayload> {
     const { sub: id } = payload;
     const user = await this.usersRepository.findOneBy({ id });
 

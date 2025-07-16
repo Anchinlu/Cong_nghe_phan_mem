@@ -19,7 +19,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       useFactory: async (configService: ConfigService) => {
         const secret = configService.get('JWT_SECRET');
         if (!secret) {
-          throw new Error('JWT_SECRET is not defined in the environment variables');
+          throw new Error(
+            'JWT_SECRET is not defined in the environment variables',
+          );
         }
         return {
           secret: secret, // <-- Sử dụng biến đã được kiểm tra
@@ -33,6 +35,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
-  exports: [PassportModule, JwtStrategy], 
+  exports: [PassportModule, JwtStrategy],
 })
 export class AuthModule {}

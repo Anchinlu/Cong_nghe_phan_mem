@@ -40,11 +40,13 @@ export default function LoginPage() {
     console.log('Đăng nhập thành công, nhận được token:', data.access_token);
     alert('Đăng nhập thành công!');
 
-  } catch (err: any) {
-   
-    console.error(err);
-    setError(err.message);
-  }
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+        setError(err.message);
+    } else {
+        setError('Đã có lỗi xảy ra.');
+    }
+}
 };
 
   return (
