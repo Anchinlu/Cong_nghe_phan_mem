@@ -23,14 +23,18 @@ async function getSeatLayout(showtimeId: string) {
 
 }
 
-export default async function BookingPage({ params }: { params: { showtimeId: string } }) {
+interface PageProps {
+  params: { showtimeId: string }
+}
+
+export default async function BookingPage({ params }: PageProps) {
   const { showtimeId } = await Promise.resolve(params);
+
   const seatData = await getSeatLayout(showtimeId);
 
-  if (!seatData) {
-    return <div className="text-white text-center pt-20">Không thể tải sơ đồ ghế. Vui lòng thử lại.</div>;
+  if (!seatData || typeof seatData.ticketPrice !== 'number') {
+    return <div className="text-white text-center pt-20">Không thể tải thông tin suất chiếu hoặc giá vé.</div>;
   }
-
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -39,6 +43,7 @@ export default async function BookingPage({ params }: { params: { showtimeId: st
         seatLayout={seatData.seatLayout}
         bookedSeats={seatData.bookedSeats}
         showtimeId={parseInt(showtimeId)}
+        ticketPrice={seatData.ticketPrice}
       />
     </div>
   );

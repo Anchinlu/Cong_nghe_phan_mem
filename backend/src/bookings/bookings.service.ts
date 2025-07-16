@@ -12,6 +12,7 @@ import { Showtime } from '../showtimes/entities/showtime.entity';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { User } from '../users/entities/user.entity';
 import { MailerService } from '@nestjs-modules/mailer'; 
+import { TicketPrice } from '../ticket-prices/entities/ticket-price.entity';
 
 @Injectable()
 export class BookingsService {
@@ -22,7 +23,9 @@ export class BookingsService {
     private bookedSeatsRepository: Repository<BookedSeat>,
     @InjectRepository(Showtime)
     private showtimesRepository: Repository<Showtime>,
-    private readonly mailerService: MailerService, 
+    @InjectRepository(TicketPrice)
+    private ticketPricesRepository: Repository<TicketPrice>,
+    private readonly mailerService: MailerService,
   ) {}
 
   async create(createBookingDto: CreateBookingDto, user: User): Promise<Booking> {
@@ -49,6 +52,24 @@ export class BookingsService {
         throw new ConflictException('Một hoặc nhiều ghế đã chọn đã có người khác đặt.');
     }
 
+    const showtimeDate = new Date(showtime.start_time);
+    const dayOfWeek = showtimeDate.getDay(); 
+    const dayType = (dayOfWeek === 0 || dayOfWeek === 6) ? 'CUOI_TUAN' : 'NGAY_THUONG';
+    const ageGroup = 'Người Lớn'; 
+
+    const ticketPriceInfo = await this.ticketPricesRepository.findOne({
+        where: {
+            theater: { id: showtime.auditorium.theater.id },
+            day_type: dayType,
+            age_group: ageGroup,
+        }
+    });
+
+    const finalTicketPrice = ticketPriceInfo ? ticketPriceInfo.price : 75000;
+    const totalPrice = seats.length * finalTicketPrice;
+    
+
+
     const newBookedSeats = seats.map(seat => {
       const bookedSeat = new BookedSeat();
       bookedSeat.row_number = seat.row;
@@ -60,7 +81,7 @@ export class BookingsService {
       user: user,
       showtime: showtime,
       seats: newBookedSeats,
-      total_price: seats.length * 75000,
+      total_price: totalPrice,
     });
     
     const savedBooking = await this.bookingsRepository.save(newBooking);

@@ -18,16 +18,17 @@ interface SeatPickerProps {
   seatLayout: SeatLayout;
   bookedSeats: Seat[];
   showtimeId: number;
+  ticketPrice: number; 
 }
 
-export default function SeatPicker({ seatLayout, bookedSeats, showtimeId }: SeatPickerProps) {
+export default function SeatPicker({ seatLayout, bookedSeats, showtimeId, ticketPrice }: SeatPickerProps) {
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
   const { user, token } = useAuth();
 
-  const TICKET_PRICE = 75000;
+  const totalPrice = selectedSeats.length * ticketPrice;
 
   const handleSeatClick = (seat: Seat) => {
 
@@ -131,16 +132,16 @@ export default function SeatPicker({ seatLayout, bookedSeats, showtimeId }: Seat
         <div className="flex items-center gap-2"><div className="seat seat-booked"></div><span>Đã đặt</span></div>
       </div>
 
-      <div className="bg-gray-800 p-6 rounded-lg w-full max-w-md">
+       <div className="bg-gray-800 p-6 rounded-lg w-full max-w-md">
         <h3 className="text-xl font-bold text-white mb-4">Tóm tắt đơn hàng</h3>
         <div className="text-gray-300 space-y-2 mb-4">
           <p>Số ghế đã chọn: {selectedSeats.length}</p>
-          <p>Tạm tính: {(selectedSeats.length * TICKET_PRICE).toLocaleString('vi-VN')} VNĐ</p>
+          <p className="font-bold text-lg">Tạm tính: {totalPrice.toLocaleString('vi-VN')} VNĐ</p>
         </div>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <button
           onClick={handleBooking}
-          disabled={isLoading}
+          disabled={isLoading || selectedSeats.length === 0}
           className="w-full bg-sky-500 text-white font-bold py-3 rounded-lg hover:bg-sky-600 transition-colors disabled:bg-gray-500"
         >
           {isLoading ? 'Đang xử lý...' : 'Đặt Vé'}

@@ -1,6 +1,6 @@
-// frontend/src/app/rap/[id]/page.tsx
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+
 import MovieSchedule from '@/components/MovieSchedule';
 
 interface Theater {
@@ -22,7 +22,7 @@ async function getTheaterDetails(id: string): Promise<Theater | null> {
 }
 
 export default async function TheaterDetailPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+  const id = await Promise.resolve(params.id); 
 
   const theaterDetails = await getTheaterDetails(id);
 

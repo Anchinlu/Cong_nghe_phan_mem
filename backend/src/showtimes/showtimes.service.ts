@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LessThanOrEqual, MoreThan, Repository } from 'typeorm';
 import { Showtime } from './entities/showtime.entity';
 import { Booking } from '../bookings/entities/booking.entity';
+import { TicketPrice } from '../ticket-prices/entities/ticket-price.entity';
 
 @Injectable()
 export class ShowtimesService {
@@ -12,6 +13,8 @@ export class ShowtimesService {
     private showtimesRepository: Repository<Showtime>,
 @InjectRepository(Booking)
     private bookingsRepository: Repository<Booking>,
+@InjectRepository(TicketPrice) 
+    private ticketPricesRepository: Repository<TicketPrice>,
 
   ) {}
   async findByMovieId(movieId: number): Promise<Showtime[]> {
@@ -26,36 +29,45 @@ export class ShowtimesService {
       },
     });
   }
-  async getSeatLayout(showtimeId: number) {
-    // 1. Lấy thông tin suất chiếu và sơ đồ ghế của phòng chiếu
-    const showtime = await this.showtimesRepository.findOne({
+ async getSeatLayout(showtimeId: number) {
+    // 1. Lấy thông tin suất chiếu VÀ thông tin rạp
+   const showtime = await this.showtimesRepository.findOne({
       where: { id: showtimeId },
-      relations: ['auditorium'],
+      relations: ['auditorium', 'auditorium.theater'],
     });
 
     if (!showtime) {
       throw new NotFoundException(`Showtime with ID ${showtimeId} not found`);
     }
 
-    // 2. Lấy tất cả các ghế đã được đặt cho suất chiếu 
-    const bookings = await this.bookingsRepository.find({
+    // 2. Xác định loại ngày và lấy giá vé
+    const showtimeDate = new Date(showtime.start_time);
+    const dayOfWeek = showtimeDate.getDay();
+    const dayType = (dayOfWeek === 0 || dayOfWeek === 6) ? 'CUOI_TUAN' : 'NGAY_THUONG';
+    
+    const ticketPriceInfo = await this.ticketPricesRepository.findOne({
+        where: {
+            theater: { id: showtime.auditorium.theater.id },
+            day_type: dayType,
+            age_group: 'Người Lớn', 
+        }
+    });
+    
+    const ticketPrice = ticketPriceInfo ? Number(ticketPriceInfo.price) : 75000;
+
+    
+     const bookings = await this.bookingsRepository.find({
       where: { showtime: { id: showtimeId } },
       relations: ['seats'],
     });
-
-    const bookedSeats = bookings.flatMap(booking => 
-        booking.seats.map(seat => ({
-            row: seat.row_number,
-            col: seat.seat_number,
-        }))
-    );
+    const bookedSeats = bookings.flatMap(b => b.seats.map(s => ({ row: s.row_number, col: s.seat_number })));
     
-    // 3. Trả về sơ đồ ghế và danh sách ghế đã đặt
     return {
       seatLayout: showtime.auditorium.seat_layout,
       bookedSeats: bookedSeats,
-         };
-    }
+      ticketPrice: ticketPrice,
+    };
+  }
      async search(
         movieId: number, 
         date: string, 

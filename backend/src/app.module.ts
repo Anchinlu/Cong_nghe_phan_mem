@@ -13,6 +13,7 @@ import { TheatersModule } from './theaters/theaters.module';
 import { AuditoriumsModule } from './auditoriums/auditoriums.module';
 import { ShowtimesModule } from './showtimes/showtimes.module';
 import { BookingsModule } from './bookings/bookings.module';
+import { TicketPricesModule } from './ticket-prices/ticket-prices.module';
 
 // Import các entity
 import { Movie } from './movies/entities/movie.entity';
@@ -22,6 +23,7 @@ import { Auditorium } from './auditoriums/entities/auditorium.entity';
 import { Showtime } from './showtimes/entities/showtime.entity';
 import { Booking } from './bookings/entities/booking.entity';
 import { BookedSeat } from './bookings/entities/booked-seat.entity';
+import { TicketPrice } from './ticket-prices/entities/ticket-price.entity';
 
 @Module({
   imports: [
@@ -37,7 +39,7 @@ import { BookedSeat } from './bookings/entities/booked-seat.entity';
         username: configService.get<string>('DATABASE_USERNAME'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
-        entities: [ Movie, User, Theater, Auditorium, Showtime, Booking, BookedSeat ],
+        entities: [ Movie, User, Theater, Auditorium, Showtime, Booking, BookedSeat, TicketPrice ],
         synchronize: true,
       }),
     }),
@@ -45,7 +47,7 @@ import { BookedSeat } from './bookings/entities/booked-seat.entity';
   
     MailerModule.forRootAsync({
       imports: [ConfigModule],
-      
+      inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         transport: {
           host: configService.get('MAIL_HOST'),
@@ -59,7 +61,6 @@ import { BookedSeat } from './bookings/entities/booked-seat.entity';
           from: configService.get('MAIL_FROM'),
         },
       }),
-      inject: [ConfigService],
     }),
     
   
@@ -69,6 +70,8 @@ import { BookedSeat } from './bookings/entities/booked-seat.entity';
     AuditoriumsModule,
     ShowtimesModule,
     BookingsModule,
+    TicketPricesModule,
+    
   ],
   controllers: [AppController],
   providers: [AppService],

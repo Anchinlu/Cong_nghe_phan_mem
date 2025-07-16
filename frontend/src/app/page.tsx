@@ -26,7 +26,6 @@ async function getNowShowingMovies(): Promise<Movie[]> {
 
 async function getUpcomingMovies(): Promise<Movie[]> {
   try {
-    // SỬA Ở ĐÂY
     const res = await fetch(`http://backend_service:8080/movies?status=UPCOMING`, { cache: 'no-cache' });
     if (!res.ok) return [];
     return res.json();
@@ -37,7 +36,6 @@ async function getUpcomingMovies(): Promise<Movie[]> {
 }
 
 export default async function HomePage() {
-  // Gọi đồng thời cả hai hàm để tối ưu thời gian tải
   const [nowShowingMovies, upcomingMovies] = await Promise.all([
     getNowShowingMovies(),
     getUpcomingMovies(),

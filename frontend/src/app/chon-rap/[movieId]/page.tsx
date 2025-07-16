@@ -1,8 +1,8 @@
-// frontend/src/app/chon-rap/[movieId]/page.tsx
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import DatePicker from '@/components/DatePicker';
 
 // Định nghĩa các kiểu dữ liệu
@@ -23,17 +23,16 @@ interface Showtime {
   };
 }
 
-// Định nghĩa cấu trúc cho dữ liệu đã được nhóm lại
 interface GroupedShowtimes {
   details: Theater;
   formats: Record<string, Showtime[]>;
 }
 
-// Hàm để định dạng ngày thành chuỗi YYYY-MM-DD
 const formatDate = (date: Date): string => date.toISOString().split('T')[0];
 
-export default function SelectTheaterPage({ params }: { params: { movieId: string } }) {
-  const { movieId } = params;
+export default function SelectTheaterPage() {
+  const params = useParams();
+  const movieId = params.movieId as string; 
 
   const [allShowtimes, setAllShowtimes] = useState<Showtime[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>(formatDate(new Date()));
@@ -69,7 +68,7 @@ export default function SelectTheaterPage({ params }: { params: { movieId: strin
 
   // Lọc và nhóm dữ liệu để hiển thị
   const cities = useMemo(() => ['Tất cả', ...new Set(allShowtimes.map(s => s.auditorium.theater.city))], [allShowtimes]);
-  
+
   const showtimesByTheater = useMemo(() => {
     return allShowtimes.reduce((acc, showtime) => {
       const theaterId = showtime.auditorium.theater.id;
@@ -85,13 +84,13 @@ export default function SelectTheaterPage({ params }: { params: { movieId: strin
       }
       acc[theaterId].formats[format].push(showtime);
       return acc;
-    }, {} as Record<number, GroupedShowtimes>); 
+    }, {} as Record<number, GroupedShowtimes>);
   }, [allShowtimes]);
 
   return (
     <div className="container mx-auto px-4 py-8 text-white">
       <h1 className="text-3xl font-bold mb-4">Lịch Chiếu Phim</h1>
-      
+
       <div className="bg-gray-800 p-4 rounded-lg mb-8 space-y-4">
         <DatePicker selectedDate={selectedDate} onDateChange={setSelectedDate} />
         <div className="flex items-center space-x-4">
@@ -115,7 +114,7 @@ export default function SelectTheaterPage({ params }: { params: { movieId: strin
             <div key={details.id} className="bg-gray-800 p-5 rounded-lg">
               <h2 className="text-xl font-bold text-sky-400 mb-2">{details.name}</h2>
               <p className="text-sm text-gray-400 mb-4">{details.address}</p>
-              
+
               {Object.entries(formats).map(([format, times]) => (
                 <div key={format} className="mb-3">
                   <p className="font-semibold text-gray-300">{format}</p>
