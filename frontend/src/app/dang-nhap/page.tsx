@@ -35,7 +35,6 @@ export default function LoginPage() {
       throw new Error(data.message || 'Đã có lỗi xảy ra khi đăng nhập.');
     }
         login(data.access_token);
-        alert('Đăng nhập thành công! Đang chuyển về trang chủ...');
         router.push('/'); 
     
     console.log('Đăng nhập thành công, nhận được token:', data.access_token);

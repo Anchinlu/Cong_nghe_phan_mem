@@ -13,6 +13,7 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { User } from '../users/entities/user.entity';
 import { MailerService } from '@nestjs-modules/mailer'; 
 import { TicketPrice } from '../ticket-prices/entities/ticket-price.entity';
+import { customAlphabet } from 'nanoid';
 
 @Injectable()
 export class BookingsService {
@@ -67,8 +68,9 @@ export class BookingsService {
 
     const finalTicketPrice = ticketPriceInfo ? ticketPriceInfo.price : 75000;
     const totalPrice = seats.length * finalTicketPrice;
-    
 
+    const nanoid = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', 9);
+    const code = nanoid().replace(/(.{3})/g, '$1-').slice(0, -1);
 
     const newBookedSeats = seats.map(seat => {
       const bookedSeat = new BookedSeat();
@@ -82,26 +84,28 @@ export class BookingsService {
       showtime: showtime,
       seats: newBookedSeats,
       total_price: totalPrice,
+      bookingCode: code,
     });
+    
     
     const savedBooking = await this.bookingsRepository.save(newBooking);
 
-    void this.mailerService.sendMail({
+     void this.mailerService.sendMail({
       to: user.email,
-      subject: `Xác nhận đặt vé thành công tại CineBooking - Mã vé #${savedBooking.id}`,
+      subject: `Xác nhận đặt vé thành công tại CineBooking - Mã vé: ${savedBooking.bookingCode}`,
       html: `
         <h1>Cảm ơn bạn đã đặt vé tại CineBooking!</h1>
         <p>Xin chào ${user.fullName},</p>
         <p>Đơn đặt vé của bạn đã được xác nhận thành công. Dưới đây là thông tin chi tiết:</p>
         <ul>
-          <li><strong>Mã đặt vé:</strong> #${savedBooking.id}</li>
+          <li><strong>Mã đặt vé:</strong> ${savedBooking.bookingCode}</li>
           <li><strong>Phim:</strong> ${showtime.movie.title}</li>
           <li><strong>Rạp:</strong> ${showtime.auditorium.theater.name} - ${showtime.auditorium.name}</li>
           <li><strong>Suất chiếu:</strong> ${new Date(showtime.start_time).toLocaleString('vi-VN')}</li>
           <li><strong>Ghế đã đặt:</strong> ${savedBooking.seats.map(s => `Hàng ${s.row_number}, Ghế ${s.seat_number}`).join(', ')}</li>
           <li><strong>Tổng tiền:</strong> ${savedBooking.total_price.toLocaleString('vi-VN')} VNĐ</li>
         </ul>
-        <p>Vui lòng đưa email này tại quầy vé để nhận vé. Chúc bạn có một buổi xem phim vui vẻ!</p>
+        <p>Vui lòng đưa mã vé tại quầy vé để nhận vé. Chúc bạn có một buổi xem phim vui vẻ!</p>
       `,
     });
 

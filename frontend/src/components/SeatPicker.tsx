@@ -80,7 +80,7 @@ export default function SeatPicker({ seatLayout, bookedSeats, showtimeId, ticket
       }
 
       const bookingResult = await res.json();
-      alert(`Đặt vé thành công! Mã đặt vé của bạn là: ${bookingResult.id}`);
+      alert(`Đặt vé thành công! Vui lòng kiểm tra Email để biết mã vé`);
 
       router.push('/');
 

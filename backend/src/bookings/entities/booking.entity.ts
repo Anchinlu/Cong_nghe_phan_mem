@@ -26,4 +26,7 @@ export class Booking {
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
+  
+  @Column({ name: 'booking_code', unique: true, nullable: true })
+  bookingCode: string;
 }
