@@ -43,7 +43,7 @@ export default function SelectTheaterPage() {
   useEffect(() => {
     setIsLoading(true);
     const fetchShowtimes = async () => {
-      const url = new URL('http://localhost:8080/showtimes/search');
+      const url = new URL('${process.env.NEXT_PUBLIC_API_URL}/showtimes/search');
       url.searchParams.append('movieId', movieId);
       url.searchParams.append('date', selectedDate);
       if (selectedCity !== 'Tất cả') {

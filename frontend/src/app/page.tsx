@@ -13,8 +13,7 @@ interface Movie {
 // Hàm lấy phim ĐANG CHIẾU
 async function getNowShowingMovies(): Promise<Movie[]> {
   try {
-    // SỬA Ở ĐÂY
-    const res = await fetch(`http://backend_service:8080/movies?status=NOW_SHOWING`, { cache: 'no-cache' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/movies?status=NOW_SHOWING`, { cache: 'no-cache' });
     if (!res.ok) return [];
     return res.json();
   } catch (error) {
@@ -26,7 +25,7 @@ async function getNowShowingMovies(): Promise<Movie[]> {
 
 async function getUpcomingMovies(): Promise<Movie[]> {
   try {
-    const res = await fetch(`http://backend_service:8080/movies?status=UPCOMING`, { cache: 'no-cache' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/movies?status=UPCOMING`, { cache: 'no-cache' });
     if (!res.ok) return [];
     return res.json();
   } catch (error) {

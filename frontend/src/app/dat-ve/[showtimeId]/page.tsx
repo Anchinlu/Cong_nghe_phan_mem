@@ -7,7 +7,7 @@ import SeatPicker from "@/components/SeatPicker";
 
 // Hàm gọi API lấy sơ đồ ghế
 async function getSeatLayout(showtimeId: string) {
-    const res = await fetch(`http://backend_service:8080/showtimes/${showtimeId}/seats`, { cache: 'no-cache' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/showtimes/${showtimeId}/seats`, { cache: 'no-cache' });
     if (!res.ok) return null;
     return res.json();
 

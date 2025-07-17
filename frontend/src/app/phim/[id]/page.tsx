@@ -35,13 +35,13 @@ interface Showtime {
 
 // Hàm lấy thông tin phim
 async function getMovieById(id: string): Promise<Movie | null> {
-    const res = await fetch(`http://backend_service:8080/movies/${id}`, { cache: 'no-cache' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/movies/${id}`, { cache: 'no-cache' });
     if (!res.ok) return null;
     return res.json();
 }
 
 async function getShowtimesByMovieId(id: string): Promise<Showtime[]> {
-    const res = await fetch(`http://backend_service:8080/movies/${id}/showtimes`, { cache: 'no-cache' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/movies/${id}/showtimes`, { cache: 'no-cache' });
     if (!res.ok) return [];
     return res.json();
 }

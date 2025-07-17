@@ -20,7 +20,7 @@ export default function TheatersPage() {
     const fetchTheaters = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch('http://localhost:8080/theaters');
+        const res = await fetch('${process.env.NEXT_PUBLIC_API_URL}/theaters');
         const data = await res.json();
         setTheaters(data);
         if (data.length > 0) {

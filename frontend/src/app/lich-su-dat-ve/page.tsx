@@ -33,7 +33,7 @@ export default function BookingHistoryPage() {
 
     const fetchHistory = async () => {
       try {
-        const res = await fetch('http://localhost:8080/bookings/my-history', {
+        const res = await fetch('${process.env.NEXT_PUBLIC_API_URL}/bookings/my-history', {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

@@ -28,7 +28,7 @@ export default function TicketPricePage() {
     const fetchTheaters = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch('http://localhost:8080/theaters');
+        const res = await fetch('${process.env.NEXT_PUBLIC_API_URL}/theaters');
         const data = await res.json();
         setTheaters(data);
         if (data.length > 0) {
@@ -52,7 +52,7 @@ export default function TicketPricePage() {
     if (selectedTheaterId) {
       const fetchPrices = async () => {
         try {
-          const res = await fetch(`http://localhost:8080/theaters/${selectedTheaterId}/prices`);
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/theaters/${selectedTheaterId}/prices`);
           const data = await res.json();
           setPrices(data);
         } catch (error) {
