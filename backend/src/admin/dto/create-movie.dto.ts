@@ -1,5 +1,4 @@
-// backend/src/admin/dto/create-movie.dto.ts
-import { IsString, IsNotEmpty, IsInt, IsOptional, IsUrl, IsDateString } from 'class-validator';
+import { IsString, IsNotEmpty, IsInt, IsOptional, IsDateString } from 'class-validator';
 
 export class CreateMovieDto {
   @IsString()
@@ -16,7 +15,7 @@ export class CreateMovieDto {
   @IsDateString()
   releaseDate: Date;
 
-  @IsUrl()
+  @IsString()  
   @IsOptional()
   posterUrl?: string;
 
@@ -28,11 +27,10 @@ export class CreateMovieDto {
   @IsOptional()
   ageRating?: string;
 
-  @IsUrl()
+  @IsString()  
   @IsOptional()
   trailerUrl?: string;
 
-  @IsUrl()
   @IsOptional()
   backdropUrl?: string;
 }

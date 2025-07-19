@@ -4,6 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 const HamburgerIcon = () => (
   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -13,6 +14,7 @@ const HamburgerIcon = () => (
 
 export default function UserMenu() {
   const { user, logout } = useAuth();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -52,6 +54,7 @@ export default function UserMenu() {
                 onClick={() => {
                   logout();
                   setIsOpen(false);
+                  router.push('/');
                 }}
                 className="w-full text-left block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
               >
