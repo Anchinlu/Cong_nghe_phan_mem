@@ -14,6 +14,7 @@ import { AuditoriumsModule } from './auditoriums/auditoriums.module';
 import { ShowtimesModule } from './showtimes/showtimes.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { TicketPricesModule } from './ticket-prices/ticket-prices.module';
+import { AdminModule } from './admin/admin.module';
 
 // Import các entity
 import { Movie } from './movies/entities/movie.entity';
@@ -48,6 +49,7 @@ import { TicketPrice } from './ticket-prices/entities/ticket-price.entity';
           Booking,
           BookedSeat,
           TicketPrice,
+          AdminModule,
         ],
         synchronize: true,
       }),
@@ -78,6 +80,7 @@ import { TicketPrice } from './ticket-prices/entities/ticket-price.entity';
     ShowtimesModule,
     BookingsModule,
     TicketPricesModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

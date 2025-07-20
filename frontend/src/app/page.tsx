@@ -1,6 +1,6 @@
 // file: frontend/src/app/page.tsx
 import Hero from "@/components/Hero";
-
+export const dynamic = 'force-dynamic';
 import MovieTabs from "@/components/MovieTabs";
 
 interface Movie {

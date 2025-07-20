@@ -28,7 +28,7 @@ export default function MovieSchedule({ theaterId }: { theaterId: number }) {
     const fetchShowtimes = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch(`http://localhost:8080/theaters/${theaterId}/showtimes?date=${selectedDate}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/theaters/${theaterId}/showtimes?date=${selectedDate}`);
         if (!res.ok) throw new Error('Failed to fetch showtimes');
         const data = await res.json();
         setShowtimes(data);

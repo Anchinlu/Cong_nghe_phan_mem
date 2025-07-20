@@ -53,7 +53,7 @@ export class TheatersService {
     return this.showtimesRepository
       .createQueryBuilder('showtime')
       .innerJoinAndSelect('showtime.movie', 'movie')
-      .innerJoinAndSelect('showtime.auditorium', 'auditorium') // <-- Thêm andSelect để lấy cả format
+      .innerJoinAndSelect('showtime.auditorium', 'auditorium') 
       .where('auditorium.theater_id = :theaterId', { theaterId })
       .andWhere('showtime.start_time BETWEEN :startDate AND :endDate', {
         startDate,
