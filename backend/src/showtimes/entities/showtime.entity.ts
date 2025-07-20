@@ -16,20 +16,21 @@ export class Showtime {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'timestamp' })
-  start_time: Date;
+  @Column({ name: 'start_time', type: 'timestamp' })
+  startTime: Date;  
 
-  @Column({ type: 'timestamp' })
-  end_time: Date;
+  @Column({ name: 'end_time', type: 'timestamp' })
+  endTime: Date;    
 
   @ManyToOne(() => Movie, (movie) => movie.id)
   @JoinColumn({ name: 'movie_id' })
   movie: Movie;
 
-  @ManyToOne('Auditorium', (auditorium: Auditorium) => auditorium.showtimes)
+  @ManyToOne(() => Auditorium, (auditorium: Auditorium) => auditorium.showtimes)
   @JoinColumn({ name: 'auditorium_id' })
   auditorium: Auditorium;
 
   @OneToMany('Booking', (booking: Booking) => booking.showtime)
   bookings: Booking[];
 }
+

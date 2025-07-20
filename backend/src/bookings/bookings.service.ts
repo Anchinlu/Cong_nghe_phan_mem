@@ -58,7 +58,7 @@ export class BookingsService {
       );
     }
 
-    const showtimeDate = new Date(showtime.start_time);
+    const showtimeDate = new Date(showtime.startTime);
     const dayOfWeek = showtimeDate.getDay();
     const dayType =
       dayOfWeek === 0 || dayOfWeek === 6 ? 'CUOI_TUAN' : 'NGAY_THUONG';
@@ -108,7 +108,7 @@ export class BookingsService {
           <li><strong>Mã đặt vé:</strong> ${savedBooking.bookingCode}</li>
           <li><strong>Phim:</strong> ${showtime.movie.title}</li>
           <li><strong>Rạp:</strong> ${showtime.auditorium.theater.name} - ${showtime.auditorium.name}</li>
-          <li><strong>Suất chiếu:</strong> ${new Date(showtime.start_time).toLocaleString('vi-VN')}</li>
+          <li><strong>Suất chiếu:</strong> ${new Date(showtime.startTime).toLocaleString('vi-VN')}</li>
           <li><strong>Ghế đã đặt:</strong> ${savedBooking.seats.map((s) => `Hàng ${s.row_number}, Ghế ${s.seat_number}`).join(', ')}</li>
           <li><strong>Tổng tiền:</strong> ${savedBooking.total_price.toLocaleString('vi-VN')} VNĐ</li>
         </ul>

@@ -1,7 +1,7 @@
 // backend/src/showtimes/showtimes.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThanOrEqual, MoreThan, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Showtime } from './entities/showtime.entity';
 import { Booking } from '../bookings/entities/booking.entity';
 import { TicketPrice } from '../ticket-prices/entities/ticket-price.entity';
@@ -16,20 +16,20 @@ export class ShowtimesService {
     @InjectRepository(TicketPrice)
     private ticketPricesRepository: Repository<TicketPrice>,
   ) {}
+
   async findByMovieId(movieId: number): Promise<Showtime[]> {
     return this.showtimesRepository.find({
       where: {
         movie: { id: movieId },
       },
-
       relations: ['auditorium', 'auditorium.theater'],
       order: {
-        start_time: 'ASC',
+        startTime: 'ASC', 
       },
     });
   }
+
   async getSeatLayout(showtimeId: number) {
-    // 1. Lấy thông tin suất chiếu VÀ thông tin rạp
     const showtime = await this.showtimesRepository.findOne({
       where: { id: showtimeId },
       relations: ['auditorium', 'auditorium.theater'],
@@ -39,8 +39,8 @@ export class ShowtimesService {
       throw new NotFoundException(`Showtime with ID ${showtimeId} not found`);
     }
 
-    // 2. Xác định loại ngày và lấy giá vé
-    const showtimeDate = new Date(showtime.start_time);
+    const showtimeDate = new Date(showtime.startTime); 
+
     const dayOfWeek = showtimeDate.getDay();
     const dayType =
       dayOfWeek === 0 || dayOfWeek === 6 ? 'CUOI_TUAN' : 'NGAY_THUONG';
@@ -59,16 +59,18 @@ export class ShowtimesService {
       where: { showtime: { id: showtimeId } },
       relations: ['seats'],
     });
+
     const bookedSeats = bookings.flatMap((b) =>
       b.seats.map((s) => ({ row: s.row_number, col: s.seat_number })),
     );
 
     return {
       seatLayout: showtime.auditorium.seat_layout,
-      bookedSeats: bookedSeats,
-      ticketPrice: ticketPrice,
+      bookedSeats,
+      ticketPrice,
     };
   }
+
   async search(
     movieId: number,
     date: string,
@@ -88,7 +90,7 @@ export class ShowtimesService {
       .andWhere('showtime.start_time BETWEEN :startDate AND :endDate', {
         startDate,
         endDate,
-      });
+      }); 
 
     if (city) {
       query.andWhere('theater.city = :city', { city });
@@ -96,7 +98,7 @@ export class ShowtimesService {
 
     return query
       .orderBy('theater.name', 'ASC')
-      .addOrderBy('showtime.start_time', 'ASC')
+      .addOrderBy('showtime.start_time', 'ASC') 
       .getMany();
   }
 }
