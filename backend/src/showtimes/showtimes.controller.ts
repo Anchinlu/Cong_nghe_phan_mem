@@ -19,4 +19,20 @@ export class ShowtimesController {
   getSeats(@Param('id') id: string) {
     return this.showtimesService.getSeatLayout(+id);
   }
+  @Get('/movie/:id')
+  async findByMovie(@Param('id') id: string) {
+    const showtimes = await this.showtimesService.findByMovieId(+id);
+
+    return showtimes.map(s => ({
+      id: s.id,
+      startTime: s.startTime, 
+      endTime: s.endTime,  
+      auditorium: {
+        name: s.auditorium.name,
+        theater: {
+          name: s.auditorium.theater.name,
+        },
+      },
+    }));
+  }
 }

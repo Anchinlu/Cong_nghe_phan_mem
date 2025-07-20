@@ -1,17 +1,16 @@
-// frontend/src/components/MovieSchedule.tsx
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import DatePicker from './DatePicker';
 
-// Định nghĩa các kiểu dữ liệu
 interface Showtime {
   id: number;
-  start_time: string;
+  startTime: string;
   movie: { id: number; title: string; posterUrl: string; genre: string };
   auditorium: { format: string; };
 }
+
 interface GroupedByMovie {
   details: Showtime['movie'];
   formats: Record<string, Showtime[]>;
@@ -31,7 +30,14 @@ export default function MovieSchedule({ theaterId }: { theaterId: number }) {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/theaters/${theaterId}/showtimes?date=${selectedDate}`);
         if (!res.ok) throw new Error('Failed to fetch showtimes');
         const data = await res.json();
-        setShowtimes(data);
+
+        
+        const mappedData: Showtime[] = data.map((s: any) => ({
+          ...s,
+          startTime: s.startTime || s.start_time, 
+        }));
+
+        setShowtimes(mappedData);
       } catch (error) {
         console.error(error);
         setShowtimes([]);
@@ -84,7 +90,7 @@ export default function MovieSchedule({ theaterId }: { theaterId: number }) {
                     <div className="flex flex-wrap gap-2 mt-1">
                       {times.map(time => (
                         <Link key={time.id} href={`/dat-ve/${time.id}`} className="bg-gray-700 font-bold py-2 px-3 rounded-md hover:bg-sky-600 transition-colors text-sm">
-                          {new Date(time.start_time).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                          {new Date(time.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
                         </Link>
                       ))}
                     </div>
