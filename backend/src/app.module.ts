@@ -10,21 +10,22 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { MoviesModule } from './movies/movies.module';
 import { AuthModule } from './auth/auth.module';
 import { TheatersModule } from './theaters/theaters.module';
-import { AuditoriumsModule } from './auditoriums/auditoriums.module';
 import { ShowtimesModule } from './showtimes/showtimes.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { TicketPricesModule } from './ticket-prices/ticket-prices.module';
 import { AdminModule } from './admin/admin.module';
+import { AuditoriumsModule } from './auditoriums/auditoriums.module';
 
 // Import các entity
 import { Movie } from './movies/entities/movie.entity';
 import { User } from './users/entities/user.entity';
 import { Theater } from './theaters/entities/theater.entity';
-import { Auditorium } from './auditoriums/entities/auditorium.entity';
 import { Showtime } from './showtimes/entities/showtime.entity';
 import { Booking } from './bookings/entities/booking.entity';
 import { BookedSeat } from './bookings/entities/booked-seat.entity';
 import { TicketPrice } from './ticket-prices/entities/ticket-price.entity';
+import { Auditorium } from './auditoriums/entities/auditorium.entity';
+
 
 @Module({
   imports: [
@@ -44,12 +45,11 @@ import { TicketPrice } from './ticket-prices/entities/ticket-price.entity';
           Movie,
           User,
           Theater,
-          Auditorium,
           Showtime,
+          Auditorium,
           Booking,
           BookedSeat,
           TicketPrice,
-          AdminModule,
         ],
         synchronize: true,
       }),
@@ -76,11 +76,11 @@ import { TicketPrice } from './ticket-prices/entities/ticket-price.entity';
     MoviesModule,
     AuthModule,
     TheatersModule,
-    AuditoriumsModule,
     ShowtimesModule,
     BookingsModule,
     TicketPricesModule,
     AdminModule,
+    AuditoriumsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

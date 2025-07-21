@@ -66,16 +66,12 @@ export class ShowtimesService {
 
     return {
       seatLayout: showtime.auditorium.seat_layout,
-      bookedSeats,
-      ticketPrice,
+      bookedSeats: bookedSeats,
+      ticketPrice: ticketPrice,
     };
   }
 
-  async search(
-    movieId: number,
-    date: string,
-    city?: string,
-  ): Promise<Showtime[]> {
+  async search(movieId: number, date: string, city?: string): Promise<Showtime[]> {
     const startDate = new Date(date);
     startDate.setHours(0, 0, 0, 0);
 
@@ -87,10 +83,10 @@ export class ShowtimesService {
       .innerJoinAndSelect('showtime.auditorium', 'auditorium')
       .innerJoinAndSelect('auditorium.theater', 'theater')
       .where('showtime.movie_id = :movieId', { movieId })
-      .andWhere('showtime.start_time BETWEEN :startDate AND :endDate', {
+      .andWhere('showtime.startTime BETWEEN :startDate AND :endDate', { 
         startDate,
         endDate,
-      }); 
+      });
 
     if (city) {
       query.andWhere('theater.city = :city', { city });
@@ -98,7 +94,7 @@ export class ShowtimesService {
 
     return query
       .orderBy('theater.name', 'ASC')
-      .addOrderBy('showtime.start_time', 'ASC') 
+      .addOrderBy('showtime.startTime', 'ASC') 
       .getMany();
   }
 }

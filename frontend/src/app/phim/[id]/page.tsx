@@ -86,7 +86,7 @@ export default async function MovieDetailPage({ params }: { params: { id: string
               height={450}
               className="rounded-lg w-full mb-4 object-cover"
             />
-            <Link href={`/dat-ve/${movie.id}`} className="w-full bg-sky-500 text-white text-center font-bold py-3 rounded-lg hover:bg-sky-600 transition-colors text-lg block">
+            <Link href={`/chon-rap/${movie.id}`} className="w-full bg-sky-500 text-white text-center font-bold py-3 rounded-lg hover:bg-sky-600 transition-colors text-lg block">
               Đặt Vé
             </Link>
           </div>
@@ -102,9 +102,6 @@ export default async function MovieDetailPage({ params }: { params: { id: string
             </div>
             <h2 className="text-xl font-bold mt-8 mb-2">Nội dung phim</h2>
             <p className="text-gray-300 leading-relaxed">{movie.description}</p>
-            
-            {/* Lịch chiếu */}
-            <ShowtimeList showtimes={showtimes} />
           </div>
         </div>
       </div>

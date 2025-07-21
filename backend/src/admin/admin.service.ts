@@ -6,34 +6,103 @@ import { Movie } from '../movies/entities/movie.entity';
 import { Showtime } from '../showtimes/entities/showtime.entity';
 import { Theater } from '../theaters/entities/theater.entity';
 import { User } from '../users/entities/user.entity';
+import { Auditorium } from '../auditoriums/entities/auditorium.entity';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { CreateShowtimeDto } from './dto/create-showtime.dto';
+import { Between, FindOptionsWhere } from 'typeorm';
 
 @Injectable()
 export class AdminService {
   constructor(
     @InjectRepository(Movie)
     private moviesRepository: Repository<Movie>,
-    @InjectRepository(Showtime) 
+    @InjectRepository(Showtime)
     private showtimesRepository: Repository<Showtime>,
-    @InjectRepository(Theater) 
+    @InjectRepository(Theater)
     private theatersRepository: Repository<Theater>,
-    @InjectRepository(User) 
+    @InjectRepository(User)
     private usersRepository: Repository<User>,
-    
+    @InjectRepository(Auditorium)
+    private auditoriumsRepository: Repository<Auditorium>,
   ) {}
+
+  async findAllShowtimes(theaterId?: number, date?: string): Promise<Showtime[]> {
+  const where: FindOptionsWhere<Showtime> = {};
+
+      if (theaterId) {
+         // Lọc theo rạp chiếu
+         where.auditorium = { theater: { id: theaterId } } as any;
+       }
+      if (date) {
+        // Lọc theo ngày chiếu
+         const startDate = new Date(date);
+         startDate.setHours(0, 0, 0, 0);
+
+        const endDate = new Date(date);
+        endDate.setHours(23, 59, 59, 999);
+
+    where.startTime = Between(startDate, endDate);
+  }
+
+  return this.showtimesRepository.find({
+    where,
+    relations: ['movie', 'auditorium', 'auditorium.theater'],
+    order: { startTime: 'DESC' },
+  });
+}
+
+  async createShowtime(createShowtimeDto: CreateShowtimeDto): Promise<Showtime> {
+    const { movieId, auditoriumId, startTime } = createShowtimeDto;
+
+    const movie = await this.moviesRepository.findOneBy({ id: movieId });
+    if (!movie) {
+      throw new NotFoundException(`Không tìm thấy phim với ID ${movieId}`);
+    }
+
+    const auditorium = await this.auditoriumsRepository.findOneBy({ id: auditoriumId });
+    if (!auditorium) {
+      throw new NotFoundException(`Không tìm thấy phòng chiếu với ID ${auditoriumId}`);
+    }
+
+    const startTimeDate = new Date(startTime);
+    const endTimeDate = new Date(startTimeDate.getTime() + movie.durationMinutes * 60000);
+
+    const newShowtime = this.showtimesRepository.create({
+      movie,
+      auditorium,
+      startTime: startTimeDate,
+      endTime: endTimeDate,
+    });
+
+    const savedShowtime = await this.showtimesRepository.save(newShowtime);
+
+    
+    const fullShowtime = await this.showtimesRepository.findOne({
+      where: { id: savedShowtime.id },
+      relations: ['movie', 'auditorium', 'auditorium.theater'],
+    });
+
+    if (!fullShowtime) {
+      throw new NotFoundException(`Không tìm thấy suất chiếu sau khi tạo.`);
+    }
+
+    return fullShowtime;
+  }
+
+  async removeShowtime(id: number): Promise<void> {
+    const result = await this.showtimesRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Không tìm thấy suất chiếu với ID ${id}`);
+    }
+  }
+
   async getStats() {
     const movieCount = await this.moviesRepository.count();
     const showtimeCount = await this.showtimesRepository.count();
     const theaterCount = await this.theatersRepository.count();
     const userCount = await this.usersRepository.count();
-
-    return {
-      movieCount,
-      showtimeCount,
-      theaterCount,
-      userCount,
-    };
+    return { movieCount, showtimeCount, theaterCount, userCount };
   }
 
   createMovie(createMovieDto: CreateMovieDto): Promise<Movie> {

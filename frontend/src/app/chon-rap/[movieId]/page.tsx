@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import DatePicker from '@/components/DatePicker';
 
-// Định nghĩa các kiểu dữ liệu
+// Kiểu dữ liệu
 interface Theater {
   id: number;
   name: string;
@@ -15,7 +15,7 @@ interface Theater {
 
 interface Showtime {
   id: number;
-  start_time: string;
+  startTime: string;
   auditorium: {
     name: string;
     format: string;
@@ -32,7 +32,7 @@ const formatDate = (date: Date): string => date.toISOString().split('T')[0];
 
 export default function SelectTheaterPage() {
   const params = useParams();
-  const movieId = params.movieId as string; 
+  const movieId = params.movieId as string;
 
   const [allShowtimes, setAllShowtimes] = useState<Showtime[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>(formatDate(new Date()));
@@ -52,7 +52,7 @@ export default function SelectTheaterPage() {
 
       try {
         const res = await fetch(url.toString());
-        if (!res.ok) throw new Error('Failed to fetch showtimes');
+        if (!res.ok) throw new Error('Không thể lấy dữ liệu suất chiếu');
         const data = await res.json();
         setAllShowtimes(data);
       } catch (error) {
@@ -66,9 +66,10 @@ export default function SelectTheaterPage() {
     fetchShowtimes();
   }, [movieId, selectedDate, selectedCity]);
 
-  // Lọc và nhóm dữ liệu để hiển thị
+  // Lấy danh sách thành phố
   const cities = useMemo(() => ['Tất cả', ...new Set(allShowtimes.map(s => s.auditorium.theater.city))], [allShowtimes]);
 
+  // Nhóm suất chiếu theo rạp
   const showtimesByTheater = useMemo(() => {
     return allShowtimes.reduce((acc, showtime) => {
       const theaterId = showtime.auditorium.theater.id;
@@ -91,6 +92,7 @@ export default function SelectTheaterPage() {
     <div className="container mx-auto px-4 py-8 text-white">
       <h1 className="text-3xl font-bold mb-4">Lịch Chiếu Phim</h1>
 
+      {/* Bộ lọc */}
       <div className="bg-gray-800 p-4 rounded-lg mb-8 space-y-4">
         <DatePicker selectedDate={selectedDate} onDateChange={setSelectedDate} />
         <div className="flex items-center space-x-4">
@@ -101,11 +103,14 @@ export default function SelectTheaterPage() {
             onChange={(e) => setSelectedCity(e.target.value)}
             className="bg-gray-700 p-2 rounded-md"
           >
-            {cities.map(city => <option key={city} value={city}>{city}</option>)}
+            {cities.map(city => (
+              <option key={city} value={city}>{city}</option>
+            ))}
           </select>
         </div>
       </div>
 
+      {/* Danh sách suất chiếu */}
       {isLoading ? (
         <div className="text-center">Đang tải lịch chiếu...</div>
       ) : Object.keys(showtimesByTheater).length > 0 ? (
@@ -119,11 +124,20 @@ export default function SelectTheaterPage() {
                 <div key={format} className="mb-3">
                   <p className="font-semibold text-gray-300">{format}</p>
                   <div className="flex flex-wrap gap-3 mt-2">
-                    {times.map(time => (
-                      <Link key={time.id} href={`/dat-ve/${time.id}`} className="bg-gray-700 font-bold py-2 px-4 rounded-md hover:bg-sky-600 transition-colors">
-                        {new Date(time.start_time).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                    {times.map(time => {
+                      if (!time.startTime) return null;
+
+                          const fixedTime = time.startTime.replace(' ', 'T');
+                      return (
+                      <Link
+                        key={time.id}
+                        href={`/dat-ve/${time.id}`}
+                        className="bg-gray-700 font-bold py-2 px-4 rounded-md hover:bg-sky-600 transition-colors"
+                      >
+                        {new Date(fixedTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
                       </Link>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               ))}
