@@ -1,4 +1,3 @@
-// backend/src/admin/admin.controller.ts
 import { 
   Controller, Post, Body, UseGuards, Put, Param, ParseIntPipe, Delete, ValidationPipe, Get, Query 
 } from '@nestjs/common';
@@ -40,11 +39,6 @@ export class AdminController {
     return this.adminService.removeShowtime(id);
   }
 
-  @Get('stats')
-  getStats() {
-    return this.adminService.getStats();
-  }
-
   @Post('movies')
   createMovie(@Body(ValidationPipe) createMovieDto: CreateMovieDto) {
     return this.adminService.createMovie(createMovieDto);
@@ -84,5 +78,20 @@ export class AdminController {
   @Delete('theaters/:id')
   removeTheater(@Param('id', ParseIntPipe) id: number) {
     return this.adminService.removeTheater(id);
+  }
+
+  @Get('users')
+  findAllUsers() {
+    return this.adminService.findAllUsers();
+  }
+
+  @Delete('users/:id')
+  removeUser(@Param('id', ParseIntPipe) id: number) {
+    return this.adminService.removeUser(id);
+  }
+
+  @Get('stats')
+  getStats() {
+    return this.adminService.getStats();
   }
 }

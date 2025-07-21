@@ -28,7 +28,6 @@ export class AdminService {
     private auditoriumsRepository: Repository<Auditorium>,
   ) {}
 
-  // =================== QUẢN LÝ SUẤT CHIẾU ===================
   async findAllShowtimes(theaterId?: number, date?: string): Promise<Showtime[]> {
     const where: FindOptionsWhere<Showtime> = {};
 
@@ -89,7 +88,6 @@ export class AdminService {
     if (result.affected === 0) throw new NotFoundException(`Không tìm thấy suất chiếu với ID ${id}`);
   }
 
-  // =================== QUẢN LÝ PHIM ===================
   createMovie(createMovieDto: CreateMovieDto): Promise<Movie> {
     const movie = this.moviesRepository.create(createMovieDto);
     return this.moviesRepository.save(movie);
@@ -107,14 +105,6 @@ export class AdminService {
   async removeMovie(id: number): Promise<void> {
     const result = await this.moviesRepository.delete(id);
     if (result.affected === 0) throw new NotFoundException(`Không tìm thấy phim với ID ${id}`);
-  }
-
-  async getStats() {
-    const movieCount = await this.moviesRepository.count();
-    const showtimeCount = await this.showtimesRepository.count();
-    const theaterCount = await this.theatersRepository.count();
-    const userCount = await this.usersRepository.count();
-    return { movieCount, showtimeCount, theaterCount, userCount };
   }
 
   findAllTheaters(): Promise<Theater[]> {
@@ -138,5 +128,27 @@ export class AdminService {
   async removeTheater(id: number): Promise<void> {
     const result = await this.theatersRepository.delete(id);
     if (result.affected === 0) throw new NotFoundException(`Không tìm thấy rạp với ID ${id}`);
+  }
+
+  async findAllUsers(): Promise<Omit<User, 'password'>[]> {
+    const users = await this.usersRepository.find({
+      order: { createdAt: 'DESC' },
+    });
+    return users.map(({ password, ...user }) => user);
+  }
+
+  async removeUser(id: number): Promise<void> {
+    const result = await this.usersRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Không tìm thấy người dùng với ID ${id}`);
+    }
+  }
+
+  async getStats() {
+    const movieCount = await this.moviesRepository.count();
+    const showtimeCount = await this.showtimesRepository.count();
+    const theaterCount = await this.theatersRepository.count();
+    const userCount = await this.usersRepository.count();
+    return { movieCount, showtimeCount, theaterCount, userCount };
   }
 }
