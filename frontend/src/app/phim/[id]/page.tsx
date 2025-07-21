@@ -21,17 +21,6 @@ interface Movie {
   releaseDate?: string;
 }
 
-interface Showtime {
-  id: number;
-  start_time: string;
-  auditorium: {
-    name: string;
-    theater: {
-      name: string;
-    };
-  };
-}
-
 // Hàm lấy thông tin phim
 async function getMovieById(id: string): Promise<Movie | null> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/movies/${id}`, { cache: 'no-cache' });
