@@ -39,12 +39,6 @@ async function getMovieById(id: string): Promise<Movie | null> {
     return res.json();
 }
 
-async function getShowtimesByMovieId(id: string): Promise<Showtime[]> {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/movies/${id}/showtimes`, { cache: 'no-cache' });
-    if (!res.ok) return [];
-    return res.json();
-}
-
 export default async function MovieDetailPage({ params }: { params: { id: string } }) {
   const { id } = await Promise.resolve(params);
 

@@ -16,6 +16,13 @@ interface GroupedByMovie {
   details: Showtime['movie'];
   formats: Record<string, Showtime[]>;
 }
+interface RawShowtime {
+  id: number;
+  start_time?: string;
+  startTime?: string;
+  movie: Showtime['movie'];
+  auditorium: Showtime['auditorium'];
+}
 
 const formatDate = (date: Date): string => date.toISOString().split('T')[0];
 
@@ -33,10 +40,10 @@ export default function MovieSchedule({ theaterId }: { theaterId: number }) {
         const data = await res.json();
 
         
-        const mappedData: Showtime[] = data.map((s: any) => ({
-          ...s,
-          startTime: s.startTime || s.start_time, 
-        }));
+        const mappedData: Showtime[] = data.map((s: RawShowtime) => ({
+        ...s,
+        startTime: s.startTime || s.start_time,
+      }));
 
         setShowtimes(mappedData);
       } catch (error) {

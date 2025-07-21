@@ -17,7 +17,7 @@ const initialFormState = { name: '', address: '', city: '' };
 export default function AdminTheatersPage() {
   const [theaters, setTheaters] = useState<Theater[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [,setError] = useState('');
   const { user, token } = useAuth();
   const router = useRouter();
 
