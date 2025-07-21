@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import DatePicker from './DatePicker';
-import Image from 'next/image';
+
 
 interface Showtime {
   id: number;

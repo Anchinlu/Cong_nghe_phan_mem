@@ -3,7 +3,6 @@ export const dynamic = 'force-dynamic';
 
 import Link from 'next/link';
 import TrailerPlayer from '@/components/TrailerPlayer';
-import ShowtimeList from '@/components/ShowtimeList'; 
 import React from 'react';
 import Image from 'next/image';
 
@@ -49,10 +48,7 @@ async function getShowtimesByMovieId(id: string): Promise<Showtime[]> {
 export default async function MovieDetailPage({ params }: { params: { id: string } }) {
   const { id } = await Promise.resolve(params);
 
-  const [movie, showtimes] = await Promise.all([
-    getMovieById(id),
-    getShowtimesByMovieId(id),
-  ]);
+  const movie = await getMovieById(id);
 
   if (!movie) {
     return <div className="text-white text-center pt-20">Không tìm thấy phim hoặc có lỗi xảy ra.</div>;
